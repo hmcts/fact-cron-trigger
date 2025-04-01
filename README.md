@@ -16,7 +16,7 @@
   - [Cron Timings](#cron-timings)
 - [Monitoring and Logging](#monitoring-and-logging)
   - [Application Insights](#application-insights)
-- [Security Considerations](#security-&-quality-considerations)
+- [Security Considerations](#security--quality-considerations)
 - [Test Suite](#test-suite)
 - [Contributing](#contributing)
 - [License](#license)
