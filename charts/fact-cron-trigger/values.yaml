@@ -3,10 +3,10 @@ java:
   image: 'hmctspublic.azurecr.io/fact/cron-trigger:latest'
   ingressHost: fact-cron-trigger-{{ .Values.global.environment }}.service.core-compute-{{ .Values.global.environment }}.internal
   aadIdentityName: fact
-#  Uncomment once the vault containing the app insights key has been set up
-#  keyVaults:
-#    fact:
-#      secrets:
-#        - name: AppInsightsInstrumentationKey
-#          alias: azure.application-insights.instrumentation-key
+  keyVaults:
+    fact:
+      secrets:
+        - name: AppInsightsInstrumentationKey
+          alias: azure.application-insights.instrumentation-key
   environment:
+    FACT_API_URL: "http://fact-api-{{ .Values.global.environment }}.service.core-compute-{{ .Values.global.environment }}.internal"
