@@ -16,6 +16,11 @@ management:
       exposure:
         include: health, info, prometheus
 
+fact:
+  url: ${FACT_API_URL:http://localhost:8080}
+  endpoint:
+    all-court-data: /search/results.json?q=
+
 springdoc:
   packagesToScan: uk.gov.hmcts.reform.fact.controllers
   writer-with-order-by-keys: true
