@@ -117,8 +117,8 @@ project.tasks['check'].dependsOn integration
 
 sonarqube {
   properties {
-    property "sonar.projectName", "Reform :: spring-boot-template"
-    property "sonar.projectKey", "uk.gov.hmcts.reform:spring-boot-template"
+    property "sonar.projectName", "Reform :: fact-cron-trigger"
+    property "sonar.projectKey", "uk.gov.hmcts.reform:fact-cron-trigger"
   }
 }
 
@@ -176,10 +176,10 @@ dependencies {
   }
 }
 
-mainClassName = 'uk.gov.hmcts.reform.demo.Application'
+mainClassName = 'uk.gov.hmcts.reform.fact.Application'
 
 bootJar {
-  archiveFileName = "spring-boot-template.jar"
+  archiveFileName = "fact-cron-trigger.jar"
 
   manifest {
     attributes('Implementation-Version': project.version.toString())
