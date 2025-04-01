@@ -23,7 +23,7 @@
 
 ## Overview
 `fact-cron-trigger` is a cron trigger that deals with actions within the Find a Court or Tribunal Service that runs on a schedule.
-It is written with Spring Boot/Java.
+It is written with Spring Boot/Java
 
 In practice, the service is usually containerized within a hosted kubernetes environment within Azure, which runs on a schedule.
 
