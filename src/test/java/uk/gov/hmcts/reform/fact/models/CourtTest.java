@@ -59,7 +59,6 @@ class CourtTest {
     @Test
     void testDefaultValuesAreNullOrFalse() {
         Court newCourt = new Court();
-
         assertThat(newCourt.getName()).isNull();
         assertThat(newCourt.getLat()).isNull();
         assertThat(newCourt.getLon()).isNull();

@@ -116,12 +116,10 @@ class FactServiceTest {
 
     @Test
     void shouldThrowJsonConvertExceptionWhenInvalidJsonIsReturned() {
-        // Given
-        String invalidJson = "{invalidJson";  // Malformed JSON
+        String invalidJson = "{invalidJson";
 
         when(factClient.getAllCourtData()).thenReturn(invalidJson);
-
-        // When & Then
+        
         assertThatThrownBy(() -> factService.getCourtData())
             .isInstanceOf(JsonConvertException.class)
             .hasMessageContaining("Error converting JSON to court model");
