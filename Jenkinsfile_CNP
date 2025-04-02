@@ -6,4 +6,7 @@ def type = "java"
 def product = "fact"
 def component = "cron-trigger"
 
-withPipeline(type, product, component) {}
+withPipeline(type, product, component) {
+  env.FACT_API_URL = "testest"
+
+}
