@@ -7,7 +7,7 @@ import java.util.List;
 
 @Getter
 @Setter
-class Address {
+public class Address {
     private List<String> addressLines;
     private String postcode;
     private String town;

@@ -9,7 +9,7 @@ import uk.gov.hmcts.reform.fact.factapi.FactClient;
 import static org.springframework.http.ResponseEntity.ok;
 
 @RestController
-public class RootController {
+public class RootControllerTest {
 
     @Autowired
     private FactClient factClient;

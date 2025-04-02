@@ -5,7 +5,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-class AreaOfLaw {
+public class AreaOfLaw {
     private String name;
     private String externalLink;
     private String displayUrl;

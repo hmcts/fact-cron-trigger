@@ -1,0 +1,203 @@
+[
+  {
+    "name": "Aberdare County Court",
+    "lat": 51.7205,
+    "lon": -3.4405,
+    "number": 123,
+    "cciCode": 123456,
+    "magistrateCode": 789,
+    "slug": "aberdare-county-court",
+    "types": ["Magistrates", "County Court"],
+    "areasOfLaw": [
+      {
+        "name": "Family",
+        "externalLink": "http://familycourt.com",
+        "displayUrl": "familycourt.com",
+        "externalLinkDesc": "Family Law Court",
+        "displayName": "Family",
+        "displayExternalLink": "familycourt.com/family"
+      },
+      {
+        "name": "Criminal",
+        "externalLink": "http://criminalcourt.com",
+        "displayUrl": "criminalcourt.com",
+        "externalLinkDesc": "Criminal Law Court",
+        "displayName": "Criminal",
+        "displayExternalLink": "criminalcourt.com/criminal"
+      }
+    ],
+    "areasOfLawSPOE": ["Civil", "Family"],
+    "displayed": true,
+    "hideAols": false,
+    "dxNumber": "DX123",
+    "distance": 5.6,
+    "addresses": [
+      {
+        "addressLines": ["123 Court Street"],
+        "postcode": "CF44 7RL",
+        "town": "Aberdare",
+        "type": "Main Court",
+        "county": "Mid Glamorgan",
+        "description": "Main court building",
+        "epimId": "AB123",
+        "fieldsOfLaw": "Family, Criminal"
+      }
+    ]
+  },
+  {
+    "name": "Aberdare Magistrates' Court",
+    "lat": null,
+    "lon": null,
+    "number": 124,
+    "cciCode": 654321,
+    "magistrateCode": 987,
+    "slug": "aberdare-magistrates-court",
+    "types": ["Magistrates"],
+    "areasOfLaw": [
+      {
+        "name": "Criminal",
+        "externalLink": "http://criminalcourt.com",
+        "displayUrl": "criminalcourt.com",
+        "externalLinkDesc": "Criminal Law Court",
+        "displayName": "Criminal",
+        "displayExternalLink": "criminalcourt.com/criminal"
+      }
+    ],
+    "areasOfLawSPOE": ["Civil"],
+    "displayed": false,
+    "hideAols": true,
+    "dxNumber": null,
+    "distance": null,
+    "addresses": [
+      {
+        "addressLines": ["456 Magistrates Avenue"],
+        "postcode": "CF44 7PQ",
+        "town": "Aberdare",
+        "type": "Magistrates Court",
+        "county": "Mid Glamorgan",
+        "description": "Magistrates court building",
+        "epimId": "AM124",
+        "fieldsOfLaw": "Criminal"
+      }
+    ]
+  },
+  {
+    "name": "Cardiff Crown Court",
+    "lat": 51.4816,
+    "lon": -3.1791,
+    "number": 125,
+    "cciCode": 789456,
+    "magistrateCode": 123,
+    "slug": "cardiff-crown-court",
+    "types": ["Crown Court"],
+    "areasOfLaw": [
+      {
+        "name": "Criminal",
+        "externalLink": "http://criminalcourt.com",
+        "displayUrl": "criminalcourt.com",
+        "externalLinkDesc": "Criminal Law Court",
+        "displayName": "Criminal",
+        "displayExternalLink": "criminalcourt.com/criminal"
+      },
+      {
+        "name": "Civil",
+        "externalLink": "http://civilcourt.com",
+        "displayUrl": "civilcourt.com",
+        "externalLinkDesc": "Civil Law Court",
+        "displayName": "Civil",
+        "displayExternalLink": "civilcourt.com/civil"
+      }
+    ],
+    "areasOfLawSPOE": ["Criminal"],
+    "displayed": true,
+    "hideAols": false,
+    "dxNumber": "DX456",
+    "distance": 10.1,
+    "addresses": [
+      {
+        "addressLines": ["1 Crown Court Road"],
+        "postcode": "CF10 3DW",
+        "town": "Cardiff",
+        "type": "Crown Court",
+        "county": "South Glamorgan",
+        "description": "Crown court building",
+        "epimId": "CC125",
+        "fieldsOfLaw": "Criminal, Civil"
+      }
+    ]
+  },
+  {
+    "name": "Swansea Magistrates' Court",
+    "lat": 51.6200,
+    "lon": -3.9436,
+    "number": 126,
+    "cciCode": 987654,
+    "magistrateCode": 234,
+    "slug": "swansea-magistrates-court",
+    "types": ["Magistrates", "Family Court"],
+    "areasOfLaw": [
+      {
+        "name": "Family",
+        "externalLink": "http://familycourt.com",
+        "displayUrl": "familycourt.com",
+        "externalLinkDesc": "Family Law Court",
+        "displayName": "Family",
+        "displayExternalLink": "familycourt.com/family"
+      }
+    ],
+    "areasOfLawSPOE": ["Family", "Civil"],
+    "displayed": false,
+    "hideAols": true,
+    "dxNumber": null,
+    "distance": 8.3,
+    "addresses": [
+      {
+        "addressLines": ["789 Family Court Road"],
+        "postcode": "SA1 1AA",
+        "town": "Swansea",
+        "type": "Family Court",
+        "county": "West Glamorgan",
+        "description": "Family court building",
+        "epimId": "SF126",
+        "fieldsOfLaw": "Family"
+      }
+    ]
+  },
+  {
+    "name": "Newport County Court",
+    "lat": null,
+    "lon": null,
+    "number": 127,
+    "cciCode": 654987,
+    "magistrateCode": 567,
+    "slug": "newport-county-court",
+    "types": ["County Court"],
+    "areasOfLaw": [
+      {
+        "name": "Criminal",
+        "externalLink": "http://criminalcourt.com",
+        "displayUrl": "criminalcourt.com",
+        "externalLinkDesc": "Criminal Law Court",
+        "displayName": "Criminal",
+        "displayExternalLink": "criminalcourt.com/criminal"
+      }
+    ],
+    "areasOfLawSPOE": ["Civil"],
+    "displayed": true,
+    "hideAols": false,
+    "dxNumber": "DX789",
+    "distance": null,
+    "addresses": [
+      {
+        "addressLines": ["101 County Court Lane"],
+        "postcode": "NP20 4EG",
+        "town": "Newport",
+        "type": "County Court",
+        "county": "Gwent",
+        "description": "County court building",
+        "epimId": "NC127",
+        "fieldsOfLaw": "Criminal"
+      }
+    ]
+  }
+]
