@@ -15,7 +15,7 @@ import static io.restassured.RestAssured.given;
 class SampleFunctionalTest {
     protected static final String CONTENT_TYPE_VALUE = "application/json";
 
-    @Value("${TEST_URL:http://localhost:8080}")
+    @Value("${TEST_URL:http://localhost:8055}")
     private String testUrl;
 
     @BeforeEach
@@ -29,11 +29,10 @@ class SampleFunctionalTest {
         Response response = given()
             .contentType(ContentType.JSON)
             .when()
-            .get()
+            .get("v1/generate-csv")
             .then()
             .extract().response();
 
         Assertions.assertEquals(200, response.statusCode());
-        Assertions.assertTrue(response.asString().startsWith("Welcome"));
     }
 }
