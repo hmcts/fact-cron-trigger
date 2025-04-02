@@ -2,6 +2,7 @@ package uk.gov.hmcts.reform.fact.models;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
 import java.util.Arrays;
 import java.util.List;
 
