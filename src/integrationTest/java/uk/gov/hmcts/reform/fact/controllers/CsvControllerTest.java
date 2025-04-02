@@ -17,16 +17,16 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureMockMvc
-class GetWelcomeTest {
+class CsvControllerTest {
 
     @Autowired
     private transient MockMvc mockMvc;
 
-    @DisplayName("Should welcome upon root request with 200 response code")
+    @DisplayName("Create a CSV, Upload to Storage Account and check it exists")
     @Test
     void welcomeRootEndpoint() throws Exception {
-        MvcResult response = mockMvc.perform(get("/")).andExpect(status().isOk()).andReturn();
+        MvcResult response = mockMvc.perform(get("/v1/generate-csv")).andExpect(status().isOk()).andReturn();
 
-        assertThat(response.getResponse().getContentAsString()).startsWith("Welcome");
+        assertThat(response.getResponse().getContentAsString()).startsWith("[{\"");
     }
 }

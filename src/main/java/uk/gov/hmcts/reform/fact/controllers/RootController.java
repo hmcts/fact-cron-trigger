@@ -8,9 +8,6 @@ import uk.gov.hmcts.reform.fact.factapi.FactClient;
 
 import static org.springframework.http.ResponseEntity.ok;
 
-/**
- * Default endpoints per application.
- */
 @RestController
 public class RootController {
 
@@ -29,10 +26,5 @@ public class RootController {
     @GetMapping("/")
     public ResponseEntity<String> welcome() {
         return ok("Welcome to fact-cron-trigger");
-    }
-
-    @GetMapping("/generate-csv")
-    public ResponseEntity<String> generateAndUploadCSV() {
-        return ResponseEntity.ok(factClient.getAllCourtData());
     }
 }
