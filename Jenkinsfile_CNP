@@ -6,8 +6,11 @@ def type = "java"
 def product = "fact"
 def component = "cron-trigger"
 
+def secrets = ['fact-${env}': [secret("azure.blob.azure-connection-string", "AZURE_STORAGE_CONNECTION_STRING")]]
+
 withPipeline(type, product, component) {
   // For integration, smoke and function tests
   env.FACT_API_URL = "http://fact-api-aat.service.core-compute-aat.internal"
+  loadVaultSecrets(secrets)
   nonServiceApp()
 }
