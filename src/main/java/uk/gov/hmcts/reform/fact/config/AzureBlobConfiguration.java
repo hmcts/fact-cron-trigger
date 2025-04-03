@@ -15,13 +15,8 @@ public class AzureBlobConfiguration {
 
     @Bean
     public BlobServiceClient blobServiceClient() {
-        BlobServiceClient blobServiceClient = new BlobServiceClientBuilder()
+        return new BlobServiceClientBuilder()
             .connectionString(connectionString)
             .buildClient();
-
-        log.info("Blob service client created");
-        log.info(String.valueOf(blobServiceClient.listBlobContainers().stream().count()));
-
-        return blobServiceClient;
     }
 }
