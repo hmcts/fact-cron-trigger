@@ -8,7 +8,7 @@ java:
       secrets:
         - name: AppInsightsInstrumentationKey
           alias: azure.application-insights.instrumentation-key
-        - name: AZURE_STORAGE_CONNECTION_STRING
+        - name: storage-account-connection-string
           alias: azure.blob.azure-connection-string
   environment:
     FACT_API_URL: "http://fact-api-{{ .Values.global.environment }}.service.core-compute-{{ .Values.global.environment }}.internal"
