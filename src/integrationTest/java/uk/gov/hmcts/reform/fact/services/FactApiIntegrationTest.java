@@ -12,7 +12,7 @@ import uk.gov.hmcts.reform.fact.factapi.FactClient;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest()
-class FactServiceTest {
+class FactApiIntegrationTest {
 
     @Autowired
     private FactClient factClient;
@@ -28,8 +28,8 @@ class FactServiceTest {
         JsonNode convertedModelList = factService.getCourtData();
 
         // Make sure they both equal one another in terms of content.
-        // If not, then the converting has missed something or another variable has been
-        // added to the API model in the meanwhile
+        // If not, then the conversion with the model classes has missed something or another variable has been
+        // added in the response to the call to FACT API
         assertThat(
             StringUtils.difference(
                 rawApiCourtData,
