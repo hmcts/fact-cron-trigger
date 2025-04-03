@@ -8,6 +8,15 @@ def component = "cron-trigger"
 
 def secrets = ['fact-${env}': [secret("azure.blob.azure-connection-string", "AZURE_STORAGE_CONNECTION_STRING")]]
 
+static LinkedHashMap<String, Object> secret(String secretName, String envVar) {
+  [$class     : 'AzureKeyVaultSecret',
+   secretType : 'Secret',
+   name       : secretName,
+   version    : '',
+   envVariable: envVar
+  ]
+}
+
 withPipeline(type, product, component) {
   // For integration, smoke and function tests
   env.FACT_API_URL = "http://fact-api-aat.service.core-compute-aat.internal"
