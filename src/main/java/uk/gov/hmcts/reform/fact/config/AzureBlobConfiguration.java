@@ -10,7 +10,7 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 @Slf4j
 public class AzureBlobConfiguration {
-    @Value("${azure.blob.azure-connection-string}")
+    @Value("${azure.blob.connection-string}")
     private String connectionString;
 
     @Bean

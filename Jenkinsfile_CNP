@@ -6,7 +6,7 @@ def type = "java"
 def product = "fact"
 def component = "cron-trigger"
 
-def secrets = ['fact-${env}': [secret("azure.blob.azure-connection-string", "AZURE_STORAGE_CONNECTION_STRING")]]
+def secrets = ['fact-${env}': [secret("azure-blob-connection-string", "STORAGE_ACCOUNT_CONNECTION_STRING")]]
 
 static LinkedHashMap<String, Object> secret(String secretName, String envVar) {
   [$class     : 'AzureKeyVaultSecret',
