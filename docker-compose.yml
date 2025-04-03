@@ -24,3 +24,19 @@ services:
       - LOGBACK_REQUIRE_ERROR_CODE=false
     ports:
       - $SERVER_PORT:$SERVER_PORT
+  azure-storage-emulator-azurite:
+    image: mcr.microsoft.com/azure-storage/azurite
+    command: azurite-blob --blobHost 0.0.0.0 --loose --skipApiVersionCheck
+    environment:
+      AZURITE_ACCOUNTS: factlocal:cmVmb3Jtc2NhbmtleQo=;
+    volumes:
+      - ./fact-azure-blob-data:/opt/azurite/folder
+    ports:
+      - 10000:10000
+  init-storage:
+    build:
+      context: ./docker/storage
+    links:
+      - azure-storage-emulator-azurite
+    depends_on:
+      - azure-storage-emulator-azurite
