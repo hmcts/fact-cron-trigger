@@ -86,7 +86,7 @@ test {
 ext.getVaultSecret = { String secretName ->
   new ByteArrayOutputStream().withStream { os ->
     exec {
-      commandLine 'az', 'keyvault', 'secret', 'show', '--vault-name', 'fact-aat', '-o', 'tsv', '--query', 'value', '--name', secretName
+      commandLine 'az', 'keyvault', 'secret', 'show', '--vault-name', 'rpts-aat', '-o', 'tsv', '--query', 'value', '--name', secretName
       standardOutput = os
     }
     return os.toString().replace('\n', '')
@@ -101,21 +101,6 @@ task functional(type: Test) {
 }
 
 task integration(type: Test) {
-
-  // Int tests run at the same level as unit, so the env vars required for tests are not present
-  doFirst() {
-    if (System.getenv("STORAGE_ACCOUNT_CONNECTION_STRING") == null) {
-      exec {
-        commandLine 'az', 'login', '--identity'
-      }
-      println("Loading secrets and admin credentials from vault")
-      systemProperty 'STORAGE_ACCOUNT_CONNECTION_STRING', getVaultSecret('storage-account-connection-string');
-    }
-    else {
-      println('Not retrieving; STORAGE_ACCOUNT_CONNECTION_STRING secret found');
-    }
-  }
-
   description = "Runs integration tests"
   group = "Verification"
   testClassesDirs = sourceSets.integrationTest.output.classesDirs

@@ -3,11 +3,13 @@ package uk.gov.hmcts.reform.fact.openapi;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
+import uk.gov.hmcts.reform.fact.config.AzureBlobConfiguration;
 
 import java.io.OutputStream;
 import java.nio.file.Files;
@@ -27,6 +29,9 @@ class OpenAPIPublisherTest {
 
     @Autowired
     private MockMvc mvc;
+
+    @Mock
+    private AzureBlobConfiguration azureBlobConfiguration;
 
     @DisplayName("Generate swagger documentation")
     @Test
