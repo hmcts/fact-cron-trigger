@@ -11,6 +11,7 @@
   <suppress>
     <notes>This vulnerability exists across azure identity and microsoft authentication libraries </notes>
     <cve>CVE-2024-35255</cve>
+    <cve>CVE-2023-36415</cve>
   </suppress>
   <!--End of false positives section -->
 </suppressions>
