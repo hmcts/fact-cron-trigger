@@ -9,6 +9,7 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import uk.gov.hmcts.reform.fact.services.AzureService;
 import uk.gov.hmcts.reform.fact.services.FactService;
 
 import static org.mockito.Mockito.when;
@@ -20,6 +21,8 @@ class CsvControllerTest {
 
     @Mock
     private FactService factService;
+    @Mock
+    private AzureService azureService;
 
     private MockMvc mockMvc;
 
@@ -29,7 +32,7 @@ class CsvControllerTest {
     void setUp() {
         // Note, ignore warning here is SpringBoot does the try-with for us
         MockitoAnnotations.openMocks(this);
-        mockMvc = MockMvcBuilders.standaloneSetup(new CsvController(factService)).build();
+        mockMvc = MockMvcBuilders.standaloneSetup(new CsvController(azureService, factService)).build();
     }
 
     @Test

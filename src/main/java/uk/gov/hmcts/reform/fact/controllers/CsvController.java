@@ -7,9 +7,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import uk.gov.hmcts.reform.fact.services.AzureService;
 import uk.gov.hmcts.reform.fact.services.FactService;
-
-import static uk.gov.hmcts.reform.fact.utils.CsvUtil.convertJsonToCsv;
 
 @RestController
 @RequestMapping(
@@ -18,9 +17,12 @@ import static uk.gov.hmcts.reform.fact.utils.CsvUtil.convertJsonToCsv;
 )
 public class CsvController {
 
+    private final AzureService azureService;
     private final FactService factService;
 
-    public CsvController(@Autowired FactService factService) {
+    public CsvController(@Autowired AzureService azureService,
+                         @Autowired FactService factService) {
+        this.azureService = azureService;
         this.factService = factService;
     }
 
@@ -32,9 +34,9 @@ public class CsvController {
      * @return A response entity that includes the CSV for download when accessing the endpoint
      */
     @GetMapping("/generate-csv")
-    public ResponseEntity<JsonNode> generateAndUploadCSV() {
+    public ResponseEntity<String> generateAndUploadCSV() {
         JsonNode courtData = factService.getCourtData();
-        System.out.println(convertJsonToCsv(courtData));
-        return ResponseEntity.ok(factService.getCourtData());
+        azureService.createCsvFileAndUpload("csv", "courts-and-tribunals-data.csv", courtData);
+        return ResponseEntity.ok("CSV has been created and uploaded to Azure SA");
     }
 }
