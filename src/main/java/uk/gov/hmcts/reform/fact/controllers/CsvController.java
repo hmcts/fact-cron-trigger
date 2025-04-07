@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import uk.gov.hmcts.reform.fact.services.FactService;
 
+import static uk.gov.hmcts.reform.fact.utils.CsvUtil.convertJsonToCsv;
+
 @RestController
 @RequestMapping(
     path = "/v1",
@@ -23,7 +25,7 @@ public class CsvController {
     }
 
     /**
-     * Used primarilly for local running for further changes
+     * Used primarily for local running for further changes
      * For the main purpose of not having to restart the application over and over.
      * Also with functional tests in the pipeline we can check the processes work
      * end-to-end as expected
@@ -31,6 +33,8 @@ public class CsvController {
      */
     @GetMapping("/generate-csv")
     public ResponseEntity<JsonNode> generateAndUploadCSV() {
+        JsonNode courtData = factService.getCourtData();
+        System.out.println(convertJsonToCsv(courtData));
         return ResponseEntity.ok(factService.getCourtData());
     }
 }
