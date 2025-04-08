@@ -9,6 +9,7 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import uk.gov.hmcts.reform.fact.runner.CsvGenerator;
 import uk.gov.hmcts.reform.fact.services.AzureService;
 import uk.gov.hmcts.reform.fact.services.FactService;
 
@@ -20,9 +21,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 class CsvControllerTest {
 
     @Mock
-    private FactService factService;
-    @Mock
-    private AzureService azureService;
+    private CsvGenerator csvGenerator;
 
     private MockMvc mockMvc;
 
@@ -32,15 +31,13 @@ class CsvControllerTest {
     void setUp() {
         // Note, ignore warning here is SpringBoot does the try-with for us
         MockitoAnnotations.openMocks(this);
-        mockMvc = MockMvcBuilders.standaloneSetup(new CsvController(azureService, factService)).build();
+        mockMvc = MockMvcBuilders.standaloneSetup(new CsvController(csvGenerator)).build();
     }
 
     @Test
     void generateAndUploadCSV_shouldReturnJsonData() throws Exception {
         String jsonString = "{\"courtData\": [{\"name\": \"Aberdare County Court\"}]}";
         JsonNode mockJsonNode = objectMapper.readTree(jsonString);
-
-        when(factService.getCourtData()).thenReturn(mockJsonNode);
 
         mockMvc.perform(get("/v1/generate-csv")
                             .contentType(MediaType.APPLICATION_JSON))
