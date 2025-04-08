@@ -28,7 +28,8 @@ public class AzureService {
     public void createCsvFileAndUpload(String containerName, String blobName, JsonNode jsonNodeData) {
         try {
             uploadFile(containerName, blobName,
-                       createCsvFile(blobName, new CsvUtil().convertJsonToCsv(jsonNodeData)));
+                       createCsvFile(blobName, new CsvUtil().convertJsonToCsv(jsonNodeData))
+            );
         } catch (IOException ex) {
             throw new AzureIOException(ex.getMessage());
         }

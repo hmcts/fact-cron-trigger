@@ -27,6 +27,7 @@ public class CsvController {
      * For the main purpose of not having to restart the application over and over.
      * Also with functional tests in the pipeline we can check the processes work
      * end-to-end as expected
+     *
      * @return A response entity that includes the CSV for download when accessing the endpoint
      */
     @GetMapping("/generate-csv")

@@ -33,6 +33,7 @@ public class GlobalControllerExceptionHandler {
         responseHeaders.set(CONTENT_TYPE, APPLICATION_JSON);
         error.put(MESSAGE, ex.getMessage());
         return new ResponseEntity<>(new ObjectMapper().writeValueAsString(error),
-                                    responseHeaders, HttpStatus.INTERNAL_SERVER_ERROR);
+                                    responseHeaders, HttpStatus.INTERNAL_SERVER_ERROR
+        );
     }
 }
