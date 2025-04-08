@@ -14,7 +14,7 @@ public class FactService {
     private final FactClient factClient;
 
     @Autowired
-    public FactService(@Autowired FactClient factClient) {
+    public FactService(FactClient factClient) {
         this.factClient = factClient;
     }
 

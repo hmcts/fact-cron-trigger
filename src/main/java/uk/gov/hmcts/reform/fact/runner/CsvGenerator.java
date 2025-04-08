@@ -16,7 +16,7 @@ public class CsvGenerator implements CommandLineRunner {
     private final FactService factService;
 
     public CsvGenerator(@Autowired AzureService azureService,
-                         @Autowired FactService factService) {
+                        @Autowired FactService factService) {
         this.azureService = azureService;
         this.factService = factService;
     }

@@ -8,8 +8,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import uk.gov.hmcts.reform.fact.runner.CsvGenerator;
-import uk.gov.hmcts.reform.fact.services.AzureService;
-import uk.gov.hmcts.reform.fact.services.FactService;
 
 @RestController
 @RequestMapping(
@@ -20,7 +18,8 @@ public class CsvController {
 
     private final CsvGenerator csvGenerator;
 
-    public CsvController(@Autowired CsvGenerator csvGenerator) {
+    @Autowired
+    public CsvController(CsvGenerator csvGenerator) {
         this.csvGenerator = csvGenerator;
     }
 

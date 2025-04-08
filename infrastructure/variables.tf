@@ -13,4 +13,3 @@ variable "subscription" {}
 variable "common_tags" {
   type = map(string)
 }
-

@@ -20,7 +20,8 @@ public class AzureService {
 
     private final BlobServiceClient blobServiceClient;
 
-    public AzureService(@Autowired BlobServiceClient blobServiceClient) {
+    @Autowired
+    public AzureService(BlobServiceClient blobServiceClient) {
         this.blobServiceClient = blobServiceClient;
     }
 
