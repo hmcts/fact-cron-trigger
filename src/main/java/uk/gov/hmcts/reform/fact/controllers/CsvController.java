@@ -1,6 +1,5 @@
 package uk.gov.hmcts.reform.fact.controllers;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
