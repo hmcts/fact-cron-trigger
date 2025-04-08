@@ -1,0 +1,16 @@
+[
+  {
+    "name": "Court Without Codes",
+    "lat": 51.5074,
+    "lon": -0.1278,
+    "number": 2,
+    "cci_code": null,
+    "magistrate_code": null,
+    "slug": "court-without-codes",
+    "types": [],
+    "displayed": false,
+    "dx_number": "",
+    "areas_of_law": [],
+    "addresses": []
+  }
+]

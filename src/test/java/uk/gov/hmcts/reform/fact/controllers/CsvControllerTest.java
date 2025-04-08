@@ -33,8 +33,8 @@ class CsvControllerTest {
 
     @Test
     void generateAndUploadCSV_shouldReturnJsonData() throws Exception {
-        String jsonString = "{\"courtData\": [{\"name\": \"Aberdare County Court\"}]}";
-        JsonNode mockJsonNode = objectMapper.readTree(jsonString);
+        JsonNode mockJsonNode =
+            objectMapper.readTree("{\"message\": \"CSV has been created and uploaded to Azure SA\"}");
 
         mockMvc.perform(get("/v1/generate-csv")
                             .contentType(MediaType.APPLICATION_JSON))

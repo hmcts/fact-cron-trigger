@@ -1,0 +1,52 @@
+[
+  {
+    "name": "Court A",
+    "lat": 52.2053,
+    "lon": -0.1218,
+    "number": 1,
+    "cci_code": 1001,
+    "magistrate_code": 10001,
+    "slug": "court-a",
+    "types": ["Criminal", "Family"],
+    "displayed": true,
+    "dx_number": "DX123",
+    "areas_of_law": [
+      {
+        "name": "Criminal",
+        "external_link": "http://example.com/criminal",
+        "external_link_desc": "Criminal Law",
+        "display_name": "Criminal Law",
+        "display_external_link": "Yes"
+      }
+    ],
+    "addresses": [
+      {
+        "town": "London",
+        "postcode": "EC1A 1BB",
+        "address_lines": ["Line 1", "Line 2"],
+        "type": "Main",
+        "county": "London",
+        "fields_of_law": {
+          "areas_of_law": ["Criminal"],
+          "courts": ["Court A"]
+        },
+        "description": "Main courthouse",
+        "epim_id": "12345"
+      }
+    ]
+  },
+  {
+    "name": "Court B",
+    "lat": 51.5074,
+    "lon": -0.1278,
+    "number": 2,
+    "cci_code": 1002,
+    "magistrate_code": 10002,
+    "slug": "court-b",
+    "types": ["Civil"],
+    "displayed": false,
+    "dx_number": "DX124",
+    "areas_of_law": [],
+    "addresses": []
+  }
+]

@@ -8,6 +8,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import uk.gov.hmcts.reform.fact.runner.CsvGenerator;
 
+import java.util.Map;
+
 @RestController
 @RequestMapping(
     path = "/v1",
@@ -31,8 +33,8 @@ public class CsvController {
      * @return A response entity that includes the CSV for download when accessing the endpoint
      */
     @GetMapping("/generate-csv")
-    public ResponseEntity<String> generateAndUploadCSV() {
+    public ResponseEntity<Map<String, String>> generateAndUploadCSV() {
         csvGenerator.createCsvAndUpload();
-        return ResponseEntity.ok("CSV has been created and uploaded to Azure SA");
+        return ResponseEntity.ok(Map.of("message", "CSV has been created and uploaded to Azure SA"));
     }
 }

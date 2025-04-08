@@ -16,6 +16,10 @@ public class CsvUtil {
 
     private final CsvMapper csvMapper;
 
+    protected CsvUtil(CsvMapper csvMapper) {
+        this.csvMapper = csvMapper;
+    }
+
     public CsvUtil() {
         this.csvMapper = new CsvMapper();
         this.csvMapper.enable(SerializationFeature.INDENT_OUTPUT);
@@ -31,7 +35,7 @@ public class CsvUtil {
 
         try {
             return csvMapper.writer(schema).writeValueAsString(flatList);
-        } catch (JsonProcessingException ex) {
+        } catch (RuntimeException | JsonProcessingException ex) {
             throw new JsonConvertException("Failed to convert JSON to CSV: " + ex.getMessage());
         }
     }
@@ -155,7 +159,9 @@ public class CsvUtil {
     }
 
     private String stringifyArray(JsonNode arrayNode) {
-        if (arrayNode == null || !arrayNode.isArray()) return "";
+        if (arrayNode == null || !arrayNode.isArray()) {
+            return "";
+        };
         List<String> items = new ArrayList<>();
         arrayNode.forEach(n -> items.add(n.asText()));
         return String.join(" | ", items);

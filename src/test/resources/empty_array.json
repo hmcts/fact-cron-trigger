@@ -1,0 +1,16 @@
+[
+  {
+    "name": "Court with Empty Arrays",
+    "lat": 51.5074,
+    "lon": -0.1278,
+    "number": 3,
+    "cci_code": 1003,
+    "magistrate_code": 10003,
+    "slug": "court-with-empty-arrays",
+    "types": [],
+    "displayed": true,
+    "dx_number": "DX124",
+    "areas_of_law": [],
+    "addresses": []
+  }
+]
