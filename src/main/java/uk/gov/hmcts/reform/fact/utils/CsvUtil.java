@@ -161,7 +161,7 @@ public class CsvUtil {
     private String stringifyArray(JsonNode arrayNode) {
         if (arrayNode == null || !arrayNode.isArray()) {
             return "";
-        };
+        }
         List<String> items = new ArrayList<>();
         arrayNode.forEach(n -> items.add(n.asText()));
         return String.join(" | ", items);
