@@ -51,7 +51,6 @@ class CsvCreationIntTest {
     }
 
     /**
-     *
      * To determine if the information retrieved from the API matches that of what
      * is deserialised and converted to the models. I.e. determine if anything is missing.
      * Will prevent data being omitted from the spreadsheet.
