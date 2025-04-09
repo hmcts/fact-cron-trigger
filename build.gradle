@@ -123,7 +123,7 @@ task integration(type: Test) {
           commandLine 'az', 'login', '--identity'
         }
         println("Loading secrets from vault for INT tests")
-        systemProperty 'STORAGE_ACCOUNT_CONNECTION_STRING', getVaultSecret('storage-account-connection-string')
+        systemProperty 'STORAGE_ACCOUNT_CONNECTION_STRIN', getVaultSecret('storage-account-connection-string')
       } else {
         println('Not logging into Azure; specified secret found');
       }
