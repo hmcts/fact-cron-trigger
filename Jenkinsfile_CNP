@@ -9,7 +9,5 @@ def component = "cron-trigger"
 withPipeline(type, product, component) {
   // For integration, smoke and function tests
   env.FACT_API_URL = "http://fact-api-aat.service.core-compute-aat.internal"
-
   nonServiceApp()
-  enableFullFunctionalTest()
 }
