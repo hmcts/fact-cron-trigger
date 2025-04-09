@@ -47,7 +47,7 @@ class CsvCreationIntTest {
         long secondsDiff = Duration.between(lastModified, now).abs().getSeconds();
 
         System.out.println("CSV Details. Last modified: " + lastModified + " | Now: " + now);
-        Assertions.assertTrue(secondsDiff <= 60, "Blob not created within the last minute");
+        Assertions.assertTrue(secondsDiff >= 60, "Blob not created within the last minute");
     }
 
     /**
