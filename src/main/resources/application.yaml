@@ -26,5 +26,3 @@ spring:
 azure:
   blob:
     connection-string: ${STORAGE_ACCOUNT_CONNECTION_STRING:DefaultEndpointsProtocol=http;AccountName=factlocal;AccountKey=cmVmb3Jtc2NhbmtleQo=;BlobEndpoint=http://localhost:10000/factlocal;}
-  application-insights:
-    instrumentation-key: ${fact.AppInsightsInstrumentationKey:00000000-0000-0000-0000-000000000000}
