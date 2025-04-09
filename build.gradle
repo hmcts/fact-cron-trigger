@@ -116,7 +116,7 @@ task integration(type: Test) {
   // we need to set up the values for the integration tests to ensure we can check the connection
   // to the Storage Account and so forth
   doFirst() {
-    // On the pipeline devmode env will not exist, therefore
+    // On the pipeline this will not exist so will default to local SA etc
     if (System.getenv("INT_ENVS_ENABLED") != null) {
       if (System.getenv("STORAGE_ACCOUNT_CONNECTION_STRING") == null) {
         exec {
