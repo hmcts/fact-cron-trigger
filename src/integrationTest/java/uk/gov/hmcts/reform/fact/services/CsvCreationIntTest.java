@@ -33,7 +33,7 @@ class CsvCreationIntTest {
     /**
      * Determine that the @SpringBootTest() annotation when launched created the new updated file in the
      * AAT SA. Since it takes a minute or so for the build to get to this stage, we can safely assume
-     * it would be new if it was replaced within a minute. This means we don't have to delete/readd
+     * it would be new if it was replaced within a minute. This means we don't have to delete/read
      * each time for the test.
      */
     @Test
@@ -52,10 +52,10 @@ class CsvCreationIntTest {
 
     /**
      * To determine if the information retrieved from the API matches that of what
-     * is deserialised and converted to the models. I.e. determine if anything is missing.
+     * is deserialized and converted to the models. I.e. determine if anything is missing.
      * Will prevent data being omitted from the spreadsheet.
      *
-     * @throws JsonProcessingException Failure to deserialise the returning JsonNode
+     * @throws JsonProcessingException Failure to deserialize the returning JsonNode
      */
     @Test
     void compareFactAPIWithMethodToConvertToModel() throws JsonProcessingException {
