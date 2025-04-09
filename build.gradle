@@ -93,6 +93,16 @@ ext.getVaultSecret = { String secretName ->
   }
 }
 
+ext.getVaultSecret = { String secretName ->
+  new ByteArrayOutputStream().withStream { os ->
+    exec {
+      commandLine 'az', 'keyvault', 'secret', 'show', '--vault-name', 'fact-aat', '-o', 'tsv', '--query', 'value', '--name', secretName
+      standardOutput = os
+    }
+    return os.toString().replace('\n', '')
+  }
+}
+
 task functional(type: Test) {
   description = "Runs functional tests"
   group = "Verification"
@@ -101,6 +111,25 @@ task functional(type: Test) {
 }
 
 task integration(type: Test) {
+
+  // Since the cron task does not run functional tests, as it is registered as a nonserviceapp()
+  // we need to set up the values for the integration tests to ensure we can check the connection
+  // to the Storage Account and so forth
+  doFirst() {
+    // On the pipeline devmode env will not exist, therefore
+    if (System.getenv("INT_ENVS_ENABLED") != null) {
+      if (System.getenv("STORAGE_ACCOUNT_CONNECTION_STRING") == null) {
+        exec {
+          commandLine 'az', 'login', '--identity'
+        }
+        println("Loading secrets from vault for INT tests")
+        systemProperty 'STORAGE_ACCOUNT_CONNECTION_STRING', getVaultSecret('storage-account-connection-string')
+      } else {
+        println('Not logging into Azure; specified secret found');
+      }
+    }
+  }
+
   description = "Runs integration tests"
   group = "Verification"
   testClassesDirs = sourceSets.integrationTest.output.classesDirs
@@ -211,5 +240,5 @@ rootProject.tasks.named("processSmokeTestResources") {
 }
 
 wrapper {
-    distributionType = Wrapper.DistributionType.ALL
+  distributionType = Wrapper.DistributionType.ALL
 }
