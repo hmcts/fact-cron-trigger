@@ -1,4 +1,4 @@
-* @hmcts/bulk-scan @hmcts/developer-enablement
+* @hmcts/bulk-scan
 
 # Ignore files updated by Renovate
 gradle/wrapper/gradle-wrapper.properties
