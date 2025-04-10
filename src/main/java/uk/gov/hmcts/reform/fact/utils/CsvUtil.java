@@ -13,7 +13,20 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * TODO: Add a comment about what this does
+ * Utility class for converting court-related JSON data into a flat CSV format.
+ *
+ * <p>This class uses the Jackson CSV and JSON libraries to parse and flatten complex, nested JSON structures
+ * representing court details into a simplified CSV format. It includes specific logic to handle various fields
+ * such as court names, geolocation, types, addresses, and areas of law, transforming them into string
+ * representations suitable for CSV output</p>.
+ *
+ * <p>Key functionality includes:
+ * - Flattening nested JSON nodes (like addresses and areas of law) into single string fields.
+ * - Building a consistent CSV schema for output.
+ * - Safely handling missing or null fields to ensure robust CSV generation</p>.
+ *
+ * <p>Intended for use in services or tools that need to export structured court data from JSON APIs into a
+ * human-readable and spreadsheet-friendly CSV format</p>.
  */
 public class CsvUtil {
 
