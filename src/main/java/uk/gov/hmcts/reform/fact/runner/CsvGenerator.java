@@ -35,6 +35,7 @@ public class CsvGenerator implements CommandLineRunner {
         log.info("Running CSV generation");
         createCsvAndUpload();
         log.info("Finished running CSV generation");
+        System.exit(0);
     }
 
     public void createCsvAndUpload() {
