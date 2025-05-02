@@ -27,10 +27,6 @@ It is written with Spring Boot/Java.
 
 In practice, the service is usually containerized within a hosted kubernetes environment within Azure, which runs on a schedule.
 
-## Features and Functionality
-
-- TODO
-
 ## Getting Started
 
 ### Prerequisites
