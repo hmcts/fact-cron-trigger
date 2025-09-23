@@ -153,7 +153,7 @@ repositories {
 ext['snakeyaml.version'] = '2.0'
 
 dependencies {
-  implementation group: 'com.azure.spring', name: 'spring-cloud-azure-starter-storage-blob', version: '5.23.0'
+  implementation group: 'com.azure.spring', name: 'spring-cloud-azure-starter-storage-blob', version: '6.0.0'
   implementation group: 'com.fasterxml.jackson.dataformat', name: 'jackson-dataformat-csv', version: '2.19.2'
   implementation group: 'org.springframework.boot', name: 'spring-boot-starter-web'
   implementation group: 'org.springframework.boot', name: 'spring-boot-starter-actuator'
