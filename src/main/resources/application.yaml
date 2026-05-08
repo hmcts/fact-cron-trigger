@@ -17,6 +17,10 @@ fact:
   endpoint:
     all-court-data: /search/results.json?q=
 
+factdata:
+  url: ${FACT_DATA_API_URL:http://localhost:8989}
+  endpoint:
+    create-and-upload-csv: /csv/
 spring:
   config:
     import: "optional:configtree:/mnt/secrets/fact/"

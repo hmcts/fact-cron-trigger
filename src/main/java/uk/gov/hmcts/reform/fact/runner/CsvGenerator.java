@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 import uk.gov.hmcts.reform.fact.services.AzureService;
+import uk.gov.hmcts.reform.fact.services.FactDataService;
 import uk.gov.hmcts.reform.fact.services.FactService;
 
 @Component
@@ -14,11 +15,14 @@ public class CsvGenerator implements CommandLineRunner {
 
     private final AzureService azureService;
     private final FactService factService;
+    private final FactDataService factDataService;
 
     public CsvGenerator(@Autowired AzureService azureService,
-                        @Autowired FactService factService) {
+                        @Autowired FactService factService,
+                        @Autowired FactDataService factDataService) {
         this.azureService = azureService;
         this.factService = factService;
+        this.factDataService = factDataService;
     }
 
     /**
@@ -34,6 +38,7 @@ public class CsvGenerator implements CommandLineRunner {
     public void run(String... args) {
         log.info("Running CSV generation");
         createCsvAndUpload();
+        factDataService.createAndUploadCsv();
         log.info("Finished running CSV generation");
         System.exit(0);
     }

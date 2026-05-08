@@ -11,6 +11,7 @@ job:
           alias: STORAGE_ACCOUNT_CONNECTION_STRING
   environment:
     FACT_API_URL: "http://fact-api-{{ .Values.global.environment }}.service.core-compute-{{ .Values.global.environment }}.internal"
+    FACT_DATA_API_URL: "http://fact-data-api-{{ .Values.global.environment }}.service.core-compute-{{ .Values.global.environment }}.internal"
   global:
     jobKind: CronJob
     enableKeyVaults: true
