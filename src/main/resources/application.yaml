@@ -26,6 +26,21 @@ spring:
     import: "optional:configtree:/mnt/secrets/fact/"
   application:
     name: FACT Cron Trigger
+  cloud:
+    azure:
+      active-directory:
+        enabled: true
+        profile:
+          tenant-id: ${TENANT_ID}
+        credential:
+          client-id: ${CLIENT_ID}
+          client-secret: ${CLIENT_SECRET}
+        app-id-uri: ${APP_URI}
+        authorization-clients:
+          accountManagementApi:
+            authorization-grant-type: client_credentials
+            scopes:
+              - ${FACT_DATA_API_URL}/.default
 
 azure:
   blob:
