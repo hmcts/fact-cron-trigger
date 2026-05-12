@@ -53,6 +53,14 @@ class CsvCreationIntTest {
      */
     @Test
     void determineNewCsvAddedToSA() {
+        // Mock the data returned from Fact API
+        String json = "{\"test\":\"data\"}";
+        Mockito.when(factClient.getAllCourtData()).thenReturn(json);
+
+        // Manually trigger the CSV creation and upload since CsvGenerator is disabled in tests
+        JsonNode courtData = factService.getCourtData();
+        azureService.createCsvFileAndUpload("csv", "courts-and-tribunals-data.csv", courtData);
+
         BlobProperties props = blobServiceClient.getBlobContainerClient("csv")
             .getBlobClient("courts-and-tribunals-data.csv")
             .getProperties();
