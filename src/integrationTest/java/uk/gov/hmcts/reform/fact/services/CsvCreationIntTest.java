@@ -8,10 +8,12 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.oauth2.client.OAuth2AuthorizedClientService;
 import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import uk.gov.hmcts.reform.fact.factapi.FactClient;
 import uk.gov.hmcts.reform.fact.factdataapi.FactDataClient;
@@ -22,7 +24,8 @@ import java.time.ZoneOffset;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@SpringBootTest()
+@SpringBootTest(properties = {"spring.cloud.azure.active-directory.enabled=false"})
+@ActiveProfiles("test")
 class CsvCreationIntTest {
 
     @Autowired
@@ -72,6 +75,9 @@ class CsvCreationIntTest {
     @Test
     void compareFactAPIWithMethodToConvertToModel() throws JsonProcessingException {
         // Get the Data from Fact Api endpoint
+        String json = "{\"test\":\"data\"}";
+        Mockito.when(factClient.getAllCourtData()).thenReturn(json);
+
         String rawApiCourtData = factClient.getAllCourtData();
 
         // Get the converted model from the Fact Service.
