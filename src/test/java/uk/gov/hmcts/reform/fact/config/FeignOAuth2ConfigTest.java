@@ -29,9 +29,6 @@ class FeignOAuth2ConfigTest {
 
     @Test
     void shouldAddAuthorizationHeaderWhenTokenIsAvailable() {
-        RequestInterceptor interceptor = feignOAuth2Config.requestInterceptor(authorizedClientManager);
-        RequestTemplate template = new RequestTemplate();
-
         OAuth2AuthorizedClient authorizedClient = mock(OAuth2AuthorizedClient.class);
         OAuth2AccessToken accessToken = mock(OAuth2AccessToken.class);
         when(accessToken.getTokenValue()).thenReturn("test-token");
@@ -40,7 +37,8 @@ class FeignOAuth2ConfigTest {
         ArgumentCaptor<OAuth2AuthorizeRequest> captor = ArgumentCaptor.forClass(OAuth2AuthorizeRequest.class);
         when(authorizedClientManager.authorize(captor.capture())).thenReturn(authorizedClient);
 
-        interceptor.apply(template);
+        RequestTemplate template = new RequestTemplate();
+        feignOAuth2Config.requestInterceptor(authorizedClientManager).apply(template);
 
         assertThat(template.headers().get("Authorization")).containsExactly("Bearer test-token");
         assertThat(captor.getValue().getClientRegistrationId()).isEqualTo("factDataApi");
