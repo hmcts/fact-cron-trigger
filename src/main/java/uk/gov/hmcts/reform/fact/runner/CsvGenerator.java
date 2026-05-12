@@ -37,8 +37,8 @@ public class CsvGenerator implements CommandLineRunner {
     @Override
     public void run(String... args) {
         log.info("Running CSV generation");
-        createCsvAndUpload();
-        factDataService.createAndUploadCsv();
+        createCsvAndUpload(); // Uses fact api
+        factDataService.createAndUploadCsv(); // Uses fact data api
         log.info("Finished running CSV generation");
         System.exit(0);
     }

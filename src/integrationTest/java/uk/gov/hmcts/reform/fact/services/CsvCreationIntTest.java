@@ -10,7 +10,11 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.oauth2.client.OAuth2AuthorizedClientService;
+import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import uk.gov.hmcts.reform.fact.factapi.FactClient;
+import uk.gov.hmcts.reform.fact.factdataapi.FactDataClient;
 
 import java.time.Duration;
 import java.time.OffsetDateTime;
@@ -26,9 +30,17 @@ class CsvCreationIntTest {
     @Autowired
     private BlobServiceClient blobServiceClient;
     @Autowired
-    private FactClient factClient;
-    @Autowired
     private FactService factService;
+    @Autowired
+    private FactDataService factDataService;
+    @MockitoBean
+    private FactClient factClient;
+    @MockitoBean
+    private FactDataClient factDataClient;
+    @MockitoBean
+    private ClientRegistrationRepository clientRegistrationRepository;
+    @MockitoBean
+    private OAuth2AuthorizedClientService authorizedClientService;
 
     /**
      * Determine that the @SpringBootTest() annotation when launched created the new updated file in the
@@ -73,5 +85,13 @@ class CsvCreationIntTest {
                 rawApiCourtData,
                 new ObjectMapper().writeValueAsString(convertedModelList)
             )).isEmpty();
+    }
+
+    /**
+     * To determine if the call to Fact Data API is successful.
+     */
+    @Test
+    void checkCallToFactDataService() {
+        Assertions.assertDoesNotThrow(() -> factDataService.createAndUploadCsv());
     }
 }

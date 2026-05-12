@@ -35,12 +35,12 @@ spring:
         credential:
           client-id: ${CLIENT_ID}
           client-secret: ${CLIENT_SECRET}
-        app-id-uri: ${APP_URI}
+        app-id-uri: ${FACT_DATA_API_URL}
         authorization-clients:
-          accountManagementApi:
+          factDataApi:
             authorization-grant-type: client_credentials
             scopes:
-              - ${FACT_DATA_API_URL}/.default
+              - ${FACT_DATA_AZ_API}/.default
 
 azure:
   blob:
