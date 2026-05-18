@@ -20,7 +20,7 @@ public class AzureBlobConfiguration {
             .buildClient();
 
         log.info(
-        "Checking initial connection to SA, total containers are {}",
+            "Checking initial connection to SA, total containers are {}",
             blobServiceClient.listBlobContainers().stream().count()
         );
 

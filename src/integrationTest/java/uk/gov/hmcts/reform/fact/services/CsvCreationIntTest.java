@@ -22,6 +22,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 class CsvCreationIntTest {
 
     @Autowired
+    private AzureService azureService;
+    @Autowired
     private BlobServiceClient blobServiceClient;
     @Autowired
     private FactClient factClient;
