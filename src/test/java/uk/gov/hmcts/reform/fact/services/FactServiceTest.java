@@ -119,7 +119,7 @@ class FactServiceTest {
         String invalidJson = "{invalidJson";
 
         when(factClient.getAllCourtData()).thenReturn(invalidJson);
-        
+
         assertThatThrownBy(() -> factService.getCourtData())
             .isInstanceOf(JsonConvertException.class)
             .hasMessageContaining("Error converting JSON to court model");

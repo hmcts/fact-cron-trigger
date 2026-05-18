@@ -21,6 +21,7 @@ factdata:
   url: ${FACT_DATA_API_URL:http://localhost:8989}
   endpoint:
     create-and-upload-csv: /csv/
+
 spring:
   config:
     import: "optional:configtree:/mnt/secrets/fact/"
@@ -31,16 +32,16 @@ spring:
       active-directory:
         enabled: true
         profile:
-          tenant-id: ${TENANT_ID}
+          tenant-id: ${AZURE_TENANT_ID}
         credential:
-          client-id: ${CLIENT_ID}
+          client-id: ${AZURE_CLIENT_ID}
           client-secret: ${CLIENT_SECRET}
         app-id-uri: ${FACT_DATA_API_URL}
         authorization-clients:
           factDataApi:
             authorization-grant-type: client_credentials
             scopes:
-              - ${FACT_DATA_AZ_API}/.default
+              - api://${API_APP_REG_ID}/.default
 
 azure:
   blob:
