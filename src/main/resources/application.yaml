@@ -41,7 +41,7 @@ spring:
           factDataApi:
             authorization-grant-type: client_credentials
             scopes:
-              - api://${API_APP_REG_ID}/.default
+              - "api://${API_APP_REG_ID}/.default"
 
 azure:
   blob:
