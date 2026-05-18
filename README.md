@@ -61,18 +61,18 @@ Below is a table of currently used environment variables for starting the servic
 
 TODO: change below
 
-| Name                         | Description                                                                                                     | Required? |
-|------------------------------|-----------------------------------------------------------------------------------------------------------------|-----------|
-| CLIENT_ID                    | The Client ID for the fact Cron Job                                                                              | No        |
-| CLIENT_SECRET                | The Client Secret for the fact Cron Job                                                                          | No        |
-| TENANT_ID                    | The tenant ID for the Azure Active Directory                                                                    | No        |
-| DATA_MANAGEMENT_AZ_API       | The Scope for Data Management                                                                                   | No        |
-| ACCOUNT_MANAGEMENT_AZ_API    | The Scope for Account Management                                                                                | No        |
-| PUBLICATION_SERVICES_AZ_API  | The Scope for Publication Services                                                                              | No        |
-| DATA_MANAGEMENT_URL          | The URL for Data Management (Defaults to Staging)                                                               | No        |
-| ACCOUNT_MANAGEMENT_URL       | The URL for Account Management (Defaults to Staging)                                                            | No        |
-| PUBLICATION_SERVICES_URL     | The URL for Publication Services (Defaults to Staging)                                                          | No        |
-| TRIGGER_TYPE                 | The trigger type to use for the app. This is what determines what action is run. Must be one of 'ScheduleTypes' | Yes       |
+| Name                        | Description                                                                                                     | Required? |
+|-----------------------------|-----------------------------------------------------------------------------------------------------------------|-----------|
+| AZURE_CLIENT_ID             | The Client ID for the fact Cron Job                                                                              | No        |
+| CLIENT_SECRET               | The Client Secret for the fact Cron Job                                                                          | No        |
+| AZURE_TENANT_ID             | The tenant ID for the Azure Active Directory                                                                    | No        |
+| DATA_MANAGEMENT_AZ_API      | The Scope for Data Management                                                                                   | No        |
+| ACCOUNT_MANAGEMENT_AZ_API   | The Scope for Account Management                                                                                | No        |
+| PUBLICATION_SERVICES_AZ_API | The Scope for Publication Services                                                                              | No        |
+| DATA_MANAGEMENT_URL         | The URL for Data Management (Defaults to Staging)                                                               | No        |
+| ACCOUNT_MANAGEMENT_URL      | The URL for Account Management (Defaults to Staging)                                                            | No        |
+| PUBLICATION_SERVICES_URL    | The URL for Publication Services (Defaults to Staging)                                                          | No        |
+| TRIGGER_TYPE                | The trigger type to use for the app. This is what determines what action is run. Must be one of 'ScheduleTypes' | Yes       |
 
 #### Application.yaml files
 The service can also be adapted using the yaml files found in the following locations:

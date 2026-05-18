@@ -11,7 +11,7 @@ job:
           alias: STORAGE_ACCOUNT_CONNECTION_STRING
     fact-kv:
       secrets:
-        - name: cron-trigger-client-secret
+        - name: bstrap-cron-trigger-client-secret
           alias: CLIENT_SECRET
         - name: api-app-reg-id
           alias: API_APP_REG_ID
