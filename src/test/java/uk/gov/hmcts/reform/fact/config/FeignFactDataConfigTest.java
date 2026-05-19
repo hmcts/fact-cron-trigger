@@ -10,8 +10,11 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.oauth2.client.OAuth2AuthorizeRequest;
+import org.springframework.security.oauth2.client.AuthorizedClientServiceOAuth2AuthorizedClientManager;
 import org.springframework.security.oauth2.client.OAuth2AuthorizedClient;
 import org.springframework.security.oauth2.client.OAuth2AuthorizedClientManager;
+import org.springframework.security.oauth2.client.OAuth2AuthorizedClientService;
+import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
 import org.springframework.security.oauth2.core.OAuth2AccessToken;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -24,6 +27,12 @@ class FeignFactDataConfigTest {
 
     @Mock
     private OAuth2AuthorizedClientManager authorizedClientManager;
+
+    @Mock
+    private ClientRegistrationRepository clientRegistrationRepository;
+
+    @Mock
+    private OAuth2AuthorizedClientService authorizedClientService;
 
     @InjectMocks
     private FeignFactDataConfig feignOAuth2Config;
@@ -73,5 +82,16 @@ class FeignFactDataConfigTest {
         interceptor.apply(template);
 
         assertThat(template.headers().get("Authorization")).isNull();
+    }
+
+    @Test
+    void shouldReturnAuthorizedClientManager() {
+        OAuth2AuthorizedClientManager manager = feignOAuth2Config.authorizedClientManager(
+            clientRegistrationRepository,
+            authorizedClientService
+        );
+
+        assertThat(manager).isNotNull();
+        assertThat(manager).isInstanceOf(AuthorizedClientServiceOAuth2AuthorizedClientManager.class);
     }
 }
