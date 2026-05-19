@@ -10,6 +10,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import uk.gov.hmcts.reform.fact.config.IntegrationTestConfig;
 import uk.gov.hmcts.reform.fact.factapi.FactClient;
 
 import java.time.Duration;
@@ -18,11 +19,7 @@ import java.time.ZoneOffset;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import org.springframework.context.annotation.Import;
-import uk.gov.hmcts.reform.fact.config.TestConfig;
-
-@SpringBootTest
-@Import(TestConfig.class)
+@SpringBootTest(classes = IntegrationTestConfig.class)
 class CsvCreationIntTest {
 
     @Autowired
@@ -42,6 +39,8 @@ class CsvCreationIntTest {
      */
     @Test
     void determineNewCsvAddedToSA() {
+        azureService.createCsvFileAndUpload("csv", "courts-and-tribunals-data.csv", factService.getCourtData());
+
         BlobProperties props = blobServiceClient.getBlobContainerClient("csv")
             .getBlobClient("courts-and-tribunals-data.csv")
             .getProperties();
