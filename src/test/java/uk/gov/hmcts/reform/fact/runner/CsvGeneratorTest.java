@@ -11,9 +11,9 @@ import uk.gov.hmcts.reform.fact.services.AzureService;
 import uk.gov.hmcts.reform.fact.services.FactDataService;
 import uk.gov.hmcts.reform.fact.services.FactService;
 
-import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.verify;
 
 @ExtendWith(MockitoExtension.class)
 class CsvGeneratorTest {
