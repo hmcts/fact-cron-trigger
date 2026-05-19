@@ -18,7 +18,11 @@ import java.time.ZoneOffset;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@SpringBootTest()
+import org.springframework.context.annotation.Import;
+import uk.gov.hmcts.reform.fact.config.TestConfig;
+
+@SpringBootTest
+@Import(TestConfig.class)
 class CsvCreationIntTest {
 
     @Autowired
