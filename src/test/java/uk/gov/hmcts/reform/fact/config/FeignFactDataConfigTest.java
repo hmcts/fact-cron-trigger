@@ -2,6 +2,7 @@ package uk.gov.hmcts.reform.fact.config;
 
 import feign.RequestInterceptor;
 import feign.RequestTemplate;
+import feign.Target;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
@@ -19,13 +20,13 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-class FeignOAuth2ConfigTest {
+class FeignFactDataConfigTest {
 
     @Mock
     private OAuth2AuthorizedClientManager authorizedClientManager;
 
     @InjectMocks
-    private FeignOAuth2Config feignOAuth2Config;
+    private FeignFactDataConfig feignOAuth2Config;
 
     @Test
     void shouldAddAuthorizationHeaderWhenTokenIsAvailable() {
@@ -38,6 +39,7 @@ class FeignOAuth2ConfigTest {
         when(authorizedClientManager.authorize(captor.capture())).thenReturn(authorizedClient);
 
         RequestTemplate template = new RequestTemplate();
+        template.feignTarget(new Target.HardCodedTarget<>(String.class, "factDataApi", "http://localhost"));
         feignOAuth2Config.requestInterceptor(authorizedClientManager).apply(template);
 
         assertThat(template.headers().get("Authorization")).containsExactly("Bearer test-token");
@@ -49,6 +51,7 @@ class FeignOAuth2ConfigTest {
     void shouldNotAddAuthorizationHeaderWhenAuthorizedClientIsNull() {
         RequestInterceptor interceptor = feignOAuth2Config.requestInterceptor(authorizedClientManager);
         RequestTemplate template = new RequestTemplate();
+        template.feignTarget(new Target.HardCodedTarget<>(String.class, "factDataApi", "http://localhost"));
 
         when(authorizedClientManager.authorize(any())).thenReturn(null);
 
@@ -59,13 +62,14 @@ class FeignOAuth2ConfigTest {
 
     @Test
     void shouldNotAddAuthorizationHeaderWhenAccessTokenIsNull() {
-        RequestInterceptor interceptor = feignOAuth2Config.requestInterceptor(authorizedClientManager);
         RequestTemplate template = new RequestTemplate();
+        template.feignTarget(new Target.HardCodedTarget<>(String.class, "factDataApi", "http://localhost"));
 
         OAuth2AuthorizedClient authorizedClient = mock(OAuth2AuthorizedClient.class);
         when(authorizedClient.getAccessToken()).thenReturn(null);
         when(authorizedClientManager.authorize(any())).thenReturn(authorizedClient);
 
+        RequestInterceptor interceptor = feignOAuth2Config.requestInterceptor(authorizedClientManager);
         interceptor.apply(template);
 
         assertThat(template.headers().get("Authorization")).isNull();
