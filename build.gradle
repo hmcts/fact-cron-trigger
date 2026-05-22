@@ -163,11 +163,6 @@ dependencies {
   implementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-openfeign', version: '5.0.1'
   implementation group: 'org.springdoc', name: 'springdoc-openapi-starter-webmvc-ui', version: '3.0.3'
   implementation group: 'com.github.hmcts.java-logging', name: 'logging', version: '8.0.0'
-  constraints {
-    implementation('com.azure:azure-sdk-all:4.10.6') {
-      because 'Fixes CVE-2026-33117 Authentication Bypass'
-    }
-  }
 
   //testImplementation group: 'org.springframework.boot', name: 'spring-boot-starter-test'
   testImplementation group: 'org.springframework.boot', name: 'spring-boot-starter-webmvc-test'
