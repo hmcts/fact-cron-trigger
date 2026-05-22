@@ -167,6 +167,7 @@ dependencies {
     implementation('com.azure:azure-sdk-all:4.10.6') {
       because 'Fixes CVE-2026-33117 Authentication Bypass'
     }
+  }
 
   //testImplementation group: 'org.springframework.boot', name: 'spring-boot-starter-test'
   testImplementation group: 'org.springframework.boot', name: 'spring-boot-starter-webmvc-test'
