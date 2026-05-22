@@ -61,7 +61,7 @@ test {
 
 ext.getVaultSecret = { String secretName ->
   new ByteArrayOutputStream().withStream { os ->
-    exec {
+    project.exec {
       commandLine 'az', 'keyvault', 'secret', 'show', '--vault-name', 'rpts-aat', '-o', 'tsv', '--query', 'value', '--name', secretName
       standardOutput = os
     }
@@ -71,7 +71,7 @@ ext.getVaultSecret = { String secretName ->
 
 ext.getVaultSecret = { String secretName ->
   new ByteArrayOutputStream().withStream { os ->
-    exec {
+    project.exec {
       commandLine 'az', 'keyvault', 'secret', 'show', '--vault-name', 'fact-aat', '-o', 'tsv', '--query', 'value', '--name', secretName
       standardOutput = os
     }
