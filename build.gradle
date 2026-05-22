@@ -150,6 +150,8 @@ repositories {
 }
 
 ext['snakeyaml.version'] = '2.0'
+ext['tomcat.version'] = '11.0.22'
+ext['netty.version'] = '4.2.13.Final'
 
 dependencies {
   implementation group: 'com.azure.spring', name: 'spring-cloud-azure-starter-storage-blob', version: '7.2.0'
