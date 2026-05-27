@@ -152,21 +152,9 @@ repositories {
 ext['snakeyaml.version'] = '2.0'
 ext['tomcat.version'] = '11.0.22'
 ext['netty.version'] = '4.2.13.Final'
-//fix for CVE-2026-33117
-ext.azureSdkVersions = [
-  'azure-core'            : '1.58.0',
-  'azure-core-amqp'       : '2.11.4',
-  'azure-core-http-netty' : '1.16.4',
-  'azure-core-management' : '1.19.4',
-  'azure-identity'        : '1.18.3',
-  'azure-json'            : '1.5.1'
-]
 
 dependencies {
-  implementation(group: 'com.azure.spring', name: 'spring-cloud-azure-starter-storage-blob', version: '7.3.0') {
-    // Keep the Key Vault Keys package out of this service unless explicitly required.As it is causing CVE-2026-33117
-    exclude group: 'com.azure', module: 'azure-security-keyvault-keys'
-  }
+  implementation group: 'com.azure.spring', name: 'spring-cloud-azure-starter-storage-blob', version: '7.3.0'
   implementation group: 'com.fasterxml.jackson.dataformat', name: 'jackson-dataformat-csv', version: '2.21.3'
   implementation group: 'org.springframework.boot', name: 'spring-boot-starter-webmvc'
   implementation group: 'org.springframework.boot', name: 'spring-boot-starter-actuator'
@@ -211,10 +199,6 @@ configurations.configureEach {
       // CVE-2025-48924
       if (det.requested.group == 'org.apache.commons' && det.requested.name == 'commons-lang3') {
         det.useVersion '3.18.0'
-      }
-      //fix for CVE-2026-33117
-      if (det.requested.group == 'com.azure' && azureSdkVersions.containsKey(det.requested.name)) {
-        det.useVersion azureSdkVersions[det.requested.name]
       }
     }
   }
