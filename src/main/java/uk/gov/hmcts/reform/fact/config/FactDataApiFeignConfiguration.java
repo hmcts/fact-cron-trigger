@@ -10,7 +10,8 @@ public class FactDataApiFeignConfiguration {
 
     @Bean
     public RequestInterceptor bearerTokenRequestInterceptor(AzureAdTokenService azureAdTokenService) {
-        return requestTemplate -> requestTemplate.header("Authorization", "Bearer " + azureAdTokenService.getAccessToken());
+        return requestTemplate -> requestTemplate.header("Authorization",
+                                                         "Bearer " + azureAdTokenService.getAccessToken());
     }
 }
 
