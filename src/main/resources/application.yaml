@@ -13,9 +13,17 @@ management:
         include: health, info, prometheus
 
 fact:
+  job:
+    type: ${FACT_JOB_TYPE:CSV}
   url: ${FACT_API_URL:http://localhost:8080}
   endpoint:
     all-court-data: /search/results.json?q=
+
+fact-data-api:
+  url: ${FACT_DATA_API_URL:http://localhost:8989}
+  endpoint:
+    delete-audits: /audits/v1
+    delete-users: /user/v1/retention
 
 spring:
   config:
@@ -24,5 +32,10 @@ spring:
     name: FACT Cron Trigger
 
 azure:
+  ad:
+    tenant-id: ${AZURE_TENANT_ID:}
+    client-id: ${AZURE_CLIENT_ID:}
+    client-secret: ${AZURE_CLIENT_SECRET:}
+    application-registration-id: ${AZURE_APP_REGISTRATION_ID:}
   blob:
     connection-string: ${STORAGE_ACCOUNT_CONNECTION_STRING:DefaultEndpointsProtocol=http;AccountName=factlocal;AccountKey=cmVmb3Jtc2NhbmtleQo=;BlobEndpoint=http://localhost:10000/factlocal;}

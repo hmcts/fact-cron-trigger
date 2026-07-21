@@ -8,5 +8,14 @@ maintainers:
   - name: HMCTS fact team
 dependencies:
   - name: job
+    alias: csvJob
+    version: 2.2.0
+    repository: oci://hmctsprod.azurecr.io/helm
+  - name: job
+    alias: userCleanup
+    version: 2.2.0
+    repository: oci://hmctsprod.azurecr.io/helm
+  - name: job
+    alias: auditCleanup
     version: 2.2.0
     repository: oci://hmctsprod.azurecr.io/helm

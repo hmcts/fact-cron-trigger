@@ -1,3 +1,11 @@
-job:
+csvJob:
+  # Don't modify below here
+  image: ${IMAGE_NAME}
+
+userCleanup:
+  # Don't modify below here
+  image: ${IMAGE_NAME}
+
+auditCleanup:
   # Don't modify below here
   image: ${IMAGE_NAME}
