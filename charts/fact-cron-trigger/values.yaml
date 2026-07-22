@@ -9,8 +9,15 @@ job:
           alias: azure.application-insights.instrumentation-key
         - name: storage-account-connection-string
           alias: STORAGE_ACCOUNT_CONNECTION_STRING
+    fact-kv:
+      secrets:
+        - name: bstrap-cron-trigger-client-secret
+          alias: CLIENT_SECRET
+        - name: api-app-reg-id
+          alias: API_APP_REG_ID
   environment:
     FACT_API_URL: "http://fact-api-{{ .Values.global.environment }}.service.core-compute-{{ .Values.global.environment }}.internal"
+    FACT_DATA_API_URL: "http://fact-data-api-{{ .Values.global.environment }}.platform.hmcts.net"
   global:
     jobKind: CronJob
     enableKeyVaults: true

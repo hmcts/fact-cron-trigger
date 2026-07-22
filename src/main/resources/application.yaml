@@ -17,11 +17,31 @@ fact:
   endpoint:
     all-court-data: /search/results.json?q=
 
+factdata:
+  url: ${FACT_DATA_API_URL:http://localhost:8989}
+  endpoint:
+    create-and-upload-csv: /csv/
+
 spring:
   config:
     import: "optional:configtree:/mnt/secrets/fact/"
   application:
     name: FACT Cron Trigger
+  cloud:
+    azure:
+      active-directory:
+        enabled: true
+        profile:
+          tenant-id: ${AZURE_TENANT_ID:}
+        credential:
+          client-id: ${AZURE_CLIENT_ID:}
+          client-secret: ${CLIENT_SECRET:}
+        app-id-uri: ${FACT_DATA_API_URL}
+        authorization-clients:
+          factDataApi:
+            authorization-grant-type: client_credentials
+            scopes:
+              - "api://${API_APP_REG_ID:}/.default"
 
 azure:
   blob:
