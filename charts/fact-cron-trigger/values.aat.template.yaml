@@ -1,7 +1,3 @@
 # Don't modify this file, it is only needed for the pipeline to set the image and ingressHost
-csvJob:
-  image: ${IMAGE_NAME}
-userCleanup:
-  image: ${IMAGE_NAME}
-auditCleanup:
+job:
   image: ${IMAGE_NAME}

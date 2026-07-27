@@ -12,9 +12,11 @@ management:
       exposure:
         include: health, info, prometheus
 
+app:
+  trigger-type: ${TRIGGER_TYPE}
+  enabled: ${TRIGGER_ENABLED:true}
+
 fact:
-  job:
-    type: ${FACT_JOB_TYPE:CSV}
   url: ${FACT_API_URL:http://localhost:8080}
   endpoint:
     all-court-data: /search/results.json?q=
@@ -22,8 +24,16 @@ fact:
 fact-data-api:
   url: ${FACT_DATA_API_URL:http://localhost:8989}
   endpoint:
+    user: /user/v1
     delete-audits: /audits/v1
     delete-users: /user/v1/retention
+  admin-user:
+    email: ${FACT_DATA_API_ADMIN_USER_EMAIL}
+    role: ${FACT_DATA_API_ADMIN_USER_ROLE}
+    sso-id: ${FACT_DATA_API_ADMIN_USER_SSO_ID}
+slack:
+  token-daily-checks: ${SLACK_TOKEN_DAILY_CHECKS}
+  channel-id-daily-checks: ${SLACK_CHANNEL_ID_DAILY_CHECKS}
 
 spring:
   config:
@@ -36,6 +46,6 @@ azure:
     tenant-id: ${AZURE_TENANT_ID:}
     client-id: ${AZURE_CLIENT_ID:}
     client-secret: ${AZURE_CLIENT_SECRET:}
-    application-registration-id: ${AZURE_APP_REGISTRATION_ID:}
+    scope: api://${AZURE_APP_REGISTRATION_ID:}/.default
   blob:
     connection-string: ${STORAGE_ACCOUNT_CONNECTION_STRING:DefaultEndpointsProtocol=http;AccountName=factlocal;AccountKey=cmVmb3Jtc2NhbmtleQo=;BlobEndpoint=http://localhost:10000/factlocal;}

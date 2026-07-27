@@ -11,10 +11,9 @@ import org.springframework.stereotype.Component;
 @Setter
 public class AzureAdProperties {
 
-    //private String tenantId;
+    private String tenantId;
     private String clientId;
     private String clientSecret;
-    private String applicationRegistrationId;
-    //private String scope;
+    private String scope;
 
 }

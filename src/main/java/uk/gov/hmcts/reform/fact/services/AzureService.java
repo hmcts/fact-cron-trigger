@@ -6,7 +6,6 @@ import com.azure.storage.blob.BlobServiceClient;
 import com.fasterxml.jackson.databind.JsonNode;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import uk.gov.hmcts.reform.fact.exceptions.AzureIOException;
@@ -16,7 +15,6 @@ import uk.gov.hmcts.reform.fact.utils.CsvUtil;
 import java.io.IOException;
 
 @Service
-@Lazy
 @Slf4j
 public class AzureService {
 

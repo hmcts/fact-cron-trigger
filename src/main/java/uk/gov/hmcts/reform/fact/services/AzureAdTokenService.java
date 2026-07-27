@@ -22,7 +22,7 @@ public class AzureAdTokenService {
 
     public AzureAdTokenService(AzureAdProperties azureAdProperties) {
         this.azureAdProperties = azureAdProperties;
-        this.scope = resolveScope(azureAdProperties.getApplicationRegistrationId());
+        this.scope = azureAdProperties.getScope();
     }
 
     public synchronized String getAccessToken() {
@@ -31,9 +31,9 @@ public class AzureAdTokenService {
             return cachedToken;
         }
 
-        if (!StringUtils.hasText(scope)) {
+        if (!StringUtils.hasText(scope) || "api:///.default".equals(scope)) {
             throw new IllegalStateException(
-                "azure.ad.scope or azure.ad.application-registration-id is required for cleanup jobs");
+                "azure.ad.scope is required for cleanup jobs");
         }
 
         AccessToken token = getCredential().getToken(new TokenRequestContext().addScopes(scope)).block();
@@ -50,7 +50,7 @@ public class AzureAdTokenService {
         if (credential == null) {
             validateAuthProperties();
             credential = new ClientSecretCredentialBuilder()
-                //  .tenantId(azureAdProperties.getTenantId())
+                .tenantId(azureAdProperties.getTenantId())
                 .clientId(azureAdProperties.getClientId())
                 .clientSecret(azureAdProperties.getClientSecret())
                 .build();
@@ -60,20 +60,13 @@ public class AzureAdTokenService {
 
     private void validateAuthProperties() {
         if (
-            //!StringUtils.hasText(azureAdProperties.getTenantId())||
-            !StringUtils.hasText(azureAdProperties.getClientId())
+            !StringUtils.hasText(azureAdProperties.getTenantId())
+                || !StringUtils.hasText(azureAdProperties.getClientId())
                 || !StringUtils.hasText(azureAdProperties.getClientSecret())) {
             throw new IllegalStateException(
-                // "azure.ad.tenant-id, azure.ad.client-id and azure.ad.client-secret are required for cleanup jobs"
-                "azure.ad.client-id and azure.ad.client-secret are required for cleanup jobs"
+                 "azure.ad.tenant-id, azure.ad.client-id and azure.ad.client-secret are required for cleanup jobs"
             );
         }
     }
 
-    private String resolveScope(String applicationRegistrationId) {
-        if (StringUtils.hasText(applicationRegistrationId)) {
-            return "api://" + applicationRegistrationId + "/.default";
-        }
-        return "";
-    }
 }
