@@ -167,7 +167,9 @@ dependencies {
   testImplementation group: 'org.springframework.boot', name: 'spring-boot-starter-test'
 }
 
-mainClassName = 'uk.gov.hmcts.reform.fact.Application'
+application {
+  mainClass = 'uk.gov.hmcts.reform.fact.Application'
+}
 
 bootJar {
   archiveFileName = "fact-cron-trigger.jar"
