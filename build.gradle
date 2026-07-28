@@ -59,24 +59,25 @@ test {
   failFast = true
 }
 
-ext.getVaultSecret = { String secretName ->
-  new ByteArrayOutputStream().withStream { os ->
-    providers.exec {
-      commandLine 'az', 'keyvault', 'secret', 'show', '--vault-name', 'rpts-aat', '-o', 'tsv', '--query', 'value', '--name', secretName
-      standardOutput = os
-    }.result.get()
-    return os.toString().replace('\n', '')
+ext.runCommand = { List<String> command ->
+  def process = new ProcessBuilder(command)
+    .redirectErrorStream(true)
+    .start()
+  def output = process.inputStream.getText('UTF-8')
+  def exitCode = process.waitFor()
+  if (exitCode != 0) {
+    throw new GradleException("Command failed (${command.join(' ')}): ${output}")
   }
+  output.trim()
 }
 
 ext.getVaultSecret = { String secretName ->
-  new ByteArrayOutputStream().withStream { os ->
-    providers.exec {
-      commandLine 'az', 'keyvault', 'secret', 'show', '--vault-name', 'fact-aat', '-o', 'tsv', '--query', 'value', '--name', secretName
-      standardOutput = os
-    }.result.get()
-    return os.toString().replace('\n', '')
-  }
+  runCommand([
+    'az', 'keyvault', 'secret', 'show',
+    '--vault-name', 'fact-aat',
+    '-o', 'tsv', '--query', 'value',
+    '--name', secretName
+  ])
 }
 
 task integration(type: Test) {
@@ -88,9 +89,7 @@ task integration(type: Test) {
     // On the pipeline this will not exist so will default to local SA etc
     if (System.getenv("INT_ENVS_ENABLED") != null) {
       if (System.getenv("STORAGE_ACCOUNT_CONNECTION_STRING") == null) {
-        providers.exec {
-          commandLine 'az', 'login', '--identity'
-        }.result.get()
+        runCommand(['az', 'login', '--identity'])
         println("Loading secrets from vault for INT tests")
         systemProperty 'STORAGE_ACCOUNT_CONNECTION_STRING', getVaultSecret('storage-account-connection-string')
       } else {
