@@ -24,13 +24,8 @@ fact:
 fact-data-api:
   url: ${FACT_DATA_API_URL:http://localhost:8989}
   endpoint:
-    user: /user/v1
     delete-audits: /audits/v1
     delete-users: /user/v1/retention
-  admin-user:
-    email: ${FACT_DATA_API_ADMIN_USER_EMAIL}
-    role: ${FACT_DATA_API_ADMIN_USER_ROLE}
-    sso-id: ${FACT_DATA_API_ADMIN_USER_SSO_ID}
 slack:
   token-daily-checks: ${SLACK_TOKEN_DAILY_CHECKS}
   channel-id-daily-checks: ${SLACK_CHANNEL_ID_DAILY_CHECKS}

@@ -18,12 +18,6 @@ job:
           alias: AZURE_CLIENT_SECRET
         - name: api-app-reg-id
           alias: AZURE_APP_REGISTRATION_ID
-        - name: fact-data-api-admin-user-email
-          alias: FACT_DATA_API_ADMIN_USER_EMAIL
-        - name: fact-data-api-admin-user-role
-          alias: FACT_DATA_API_ADMIN_USER_ROLE
-        - name: fact-data-api-admin-user-sso-id
-          alias: FACT_DATA_API_ADMIN_USER_SSO_ID
         - name: bstrap-slack-token
           alias: SLACK_TOKEN
         - name: bstrap-slack-channel-id
