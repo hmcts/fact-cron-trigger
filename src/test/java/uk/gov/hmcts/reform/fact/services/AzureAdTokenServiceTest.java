@@ -84,7 +84,8 @@ class AzureAdTokenServiceTest {
 
         assertThatThrownBy(service::getAccessToken)
             .isInstanceOf(IllegalStateException.class)
-            .hasMessage("azure.ad.tenant-id, azure.ad.client-id and azure.ad.client-secret are required for cleanup jobs");
+            .hasMessage("azure.ad.tenant-id, azure.ad.client-id and "
+                            + "azure.ad.client-secret are required for cleanup jobs");
     }
 
     @Test
