@@ -15,6 +15,7 @@ import uk.gov.hmcts.reform.fact.config.AzureAdProperties;
 
 import java.lang.reflect.Field;
 import java.time.OffsetDateTime;
+import java.util.concurrent.atomic.AtomicReference;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -88,7 +89,7 @@ class AzureAdTokenServiceTest {
 
     @Test
     void shouldThrowWhenTokenAcquisitionReturnsNull() throws Exception {
-        setField(service, "credential", credential);
+        setField(service, "credential", new AtomicReference<>(credential));
         when(credential.getToken(any(TokenRequestContext.class))).thenReturn(Mono.empty());
 
         assertThatThrownBy(service::getAccessToken)
@@ -99,7 +100,7 @@ class AzureAdTokenServiceTest {
     @Test
     void shouldAcquireAndCacheToken() throws Exception {
         AccessToken accessToken = new AccessToken("fresh-token", OffsetDateTime.now().plusMinutes(30));
-        setField(service, "credential", credential);
+        setField(service, "credential", new AtomicReference<>(credential));
         when(credential.getToken(any(TokenRequestContext.class))).thenReturn(Mono.just(accessToken));
 
         String firstToken = service.getAccessToken();

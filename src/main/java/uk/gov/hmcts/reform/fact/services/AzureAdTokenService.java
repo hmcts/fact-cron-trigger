@@ -9,6 +9,7 @@ import org.springframework.util.StringUtils;
 import uk.gov.hmcts.reform.fact.config.AzureAdProperties;
 
 import java.time.OffsetDateTime;
+import java.util.concurrent.atomic.AtomicReference;
 
 @Service
 public class AzureAdTokenService {
@@ -16,7 +17,7 @@ public class AzureAdTokenService {
     private final AzureAdProperties azureAdProperties;
     private final String scope;
 
-    private volatile ClientSecretCredential credential;
+    private final AtomicReference<ClientSecretCredential> credential = new AtomicReference<>();
     private volatile String cachedToken;
     private volatile OffsetDateTime cachedTokenExpiry;
 
@@ -47,15 +48,23 @@ public class AzureAdTokenService {
     }
 
     private ClientSecretCredential getCredential() {
-        if (credential == null) {
-            validateAuthProperties();
-            credential = new ClientSecretCredentialBuilder()
-                .tenantId(azureAdProperties.getTenantId())
-                .clientId(azureAdProperties.getClientId())
-                .clientSecret(azureAdProperties.getClientSecret())
-                .build();
+        ClientSecretCredential existing = credential.get();
+        if (existing != null) {
+            return existing;
         }
-        return credential;
+
+        validateAuthProperties();
+        ClientSecretCredential created = new ClientSecretCredentialBuilder()
+            .tenantId(azureAdProperties.getTenantId())
+            .clientId(azureAdProperties.getClientId())
+            .clientSecret(azureAdProperties.getClientSecret())
+            .build();
+
+        if (credential.compareAndSet(null, created)) {
+            return created;
+        }
+
+        return credential.get();
     }
 
     private void validateAuthProperties() {
