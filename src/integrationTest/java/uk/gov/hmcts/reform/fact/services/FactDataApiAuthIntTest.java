@@ -6,15 +6,13 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Assumptions;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
-import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Import;
+import org.springframework.security.oauth2.client.OAuth2AuthorizeRequest;
+import org.springframework.security.oauth2.client.OAuth2AuthorizedClient;
+import org.springframework.security.oauth2.client.OAuth2AuthorizedClientManager;
 import org.springframework.util.StringUtils;
-import uk.gov.hmcts.reform.fact.config.AzureAdProperties;
-import uk.gov.hmcts.reform.fact.config.FactDataApiFeignConfiguration;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -25,19 +23,38 @@ import java.net.http.HttpResponse;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@SpringBootTest(classes = FactDataApiAuthIntTest.TestConfig.class)
+@SpringBootTest(
+    classes = FactDataApiAuthIntTestConfig.class,
+    properties = {
+        "spring.security.oauth2.client.registration.fact-data-api.client-id=${AZURE_CLIENT_ID:}",
+        "spring.security.oauth2.client.registration.fact-data-api.client-secret"
+            + "=${AZURE_CLIENT_SECRET:}",
+        "spring.security.oauth2.client.provider.azure-ad.token-uri="
+            + "${FACT_DATA_API_TOKEN_URI:}"
+    }
+)
 class FactDataApiAuthIntTest {
     private static final String LIVE_TEST_FLAG = "fact.auth.live-test.enabled";
     private static final String LIVE_TEST_ENV_FLAG = "FACT_AUTH_LIVE_TEST_ENABLED";
 
+    private static final String FACT_DATA_API_REGISTRATION_ID = "fact-data-api";
+
     @Autowired
-    private AzureAdTokenService azureAdTokenService;
+    @Qualifier("factDataApiAuthorizedClientManager")
+    private OAuth2AuthorizedClientManager authorizedClientManager;
 
     @Autowired
     private RequestInterceptor bearerTokenRequestInterceptor;
 
     @Autowired
-    private AzureAdProperties azureAdProperties;
+    @Value("${spring.security.oauth2.client.registration.fact-data-api.client-id:}")
+    private String oauthClientId;
+
+    @Value("${spring.security.oauth2.client.registration.fact-data-api.client-secret:}")
+    private String oauthClientSecret;
+
+    @Value("${spring.security.oauth2.client.provider.azure-ad.token-uri:}")
+    private String oauthTokenUri;
 
     @Value("${fact-data-api.url}")
     private String factDataApiUrl;
@@ -51,17 +68,17 @@ class FactDataApiAuthIntTest {
     @BeforeEach
     void requireAzureAdSecrets() {
         Assumptions.assumeTrue(
-            StringUtils.hasText(azureAdProperties.getClientId())
-                && StringUtils.hasText(azureAdProperties.getClientSecret())
-                && StringUtils.hasText(azureAdProperties.getScope()),
-            "Set azure.ad.client-id, azure.ad.client-secret and azure.ad.scope "
+            StringUtils.hasText(oauthClientId)
+                && StringUtils.hasText(oauthClientSecret)
+                && StringUtils.hasText(oauthTokenUri),
+            "Set OAuth2 client credentials and token URI "
                 + "to run FactDataApiAuthIntTest"
         );
     }
 
     @Test
     void shouldFetchAzureAdAccessTokenForFactDataApiCalls() {
-        String accessToken = azureAdTokenService.getAccessToken();
+        String accessToken = getAccessToken();
         assertThat(accessToken).isNotBlank();
     }
 
@@ -81,7 +98,7 @@ class FactDataApiAuthIntTest {
     void shouldCallFactDataApiWithValidTokenOnLocalOnly() throws Exception {
         assumeLiveApiTestsEnabledAndSafeToRun();
 
-        String accessToken = azureAdTokenService.getAccessToken();
+        String accessToken = getAccessToken();
         int status = callDeleteUsersApi(accessToken);
 
         assertThat(status)
@@ -131,6 +148,18 @@ class FactDataApiAuthIntTest {
         return response.statusCode();
     }
 
+    private String getAccessToken() {
+        OAuth2AuthorizeRequest authorizeRequest = OAuth2AuthorizeRequest
+            .withClientRegistrationId(FACT_DATA_API_REGISTRATION_ID)
+            .principal("fact-cron-trigger")
+            .build();
+
+        OAuth2AuthorizedClient client = authorizedClientManager.authorize(authorizeRequest);
+        assertThat(client).as("OAuth2 client should be authorized").isNotNull();
+        assertThat(client.getAccessToken()).as("OAuth2 access token should be present").isNotNull();
+        return client.getAccessToken().getTokenValue();
+    }
+
     private boolean isLiveTestEnabled() {
         return liveTestEnabledFromSpring
             || Boolean.getBoolean(LIVE_TEST_FLAG)
@@ -158,13 +187,6 @@ class FactDataApiAuthIntTest {
         }
     }
 
-    @Configuration
-    @EnableAutoConfiguration
-    @EnableConfigurationProperties(AzureAdProperties.class)
-    @Import({AzureAdTokenService.class, FactDataApiFeignConfiguration.class})
-    static class TestConfig {
-        // Minimal context for auth wiring checks.
-    }
 }
 
 

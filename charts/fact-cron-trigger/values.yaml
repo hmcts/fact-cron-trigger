@@ -24,7 +24,7 @@ job:
           alias: SLACK_CHANNEL_ID
   environment:
     FACT_API_URL: "http://fact-api-{{ .Values.global.environment }}.service.core-compute-{{ .Values.global.environment }}.internal"
-    FACT_DATA_API_URL: "http://fact-data-api-{{ .Values.global.environment }}.service.core-compute-{{ .Values.global.environment }}.internal"
+    FACT_DATA_API_URL: "https://fact-data-api.{{ .Values.global.environment }}.platform.hmcts.net"
   global:
     jobKind: CronJob
     enableKeyVaults: true

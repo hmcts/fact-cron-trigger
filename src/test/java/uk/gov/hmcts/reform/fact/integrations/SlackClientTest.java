@@ -52,13 +52,14 @@ class SlackClientTest {
     }
 
     @Test
-    void shouldSkipSlackCallWhenTokenMissing() {
+    void shouldThrowWhenTokenMissing() {
         properties.setTokenDailyChecks(" ");
 
-        try (MockedStatic<Slack> slackStatic = mockStatic(Slack.class)) {
-            slackClient.sendSlackMessage("hello");
-            slackStatic.verifyNoInteractions();
-        }
+        assertThatThrownBy(() -> slackClient.sendSlackMessage("hello"))
+            .isInstanceOf(IllegalStateException.class)
+            .hasMessage(
+                "Slack token/channel is not configured; skipping Slack notification."
+            );
     }
 
     @Test

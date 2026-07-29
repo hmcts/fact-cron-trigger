@@ -23,8 +23,9 @@ public class SlackClient {
     public void sendSlackMessage(String message) {
         if (!StringUtils.hasText(properties.getTokenDailyChecks())
             || !StringUtils.hasText(properties.getChannelIdDailyChecks())) {
-            log.warn("Slack token/channel is not configured; skipping Slack message");
-            return;
+            throw new IllegalStateException(
+                "Slack token/channel is not configured; skipping Slack notification."
+            );
         }
 
         try {

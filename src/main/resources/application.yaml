@@ -27,20 +27,32 @@ fact-data-api:
     delete-audits: /audits/v1
     delete-users: /user/v1/retention
 slack:
-  token-daily-checks: ${SLACK_TOKEN_DAILY_CHECKS}
-  channel-id-daily-checks: ${SLACK_CHANNEL_ID_DAILY_CHECKS}
+  token-daily-checks: ${SLACK_TOKEN}
+  channel-id-daily-checks: ${SLACK_CHANNEL_ID}
 
 spring:
   config:
     import: "optional:configtree:/mnt/secrets/fact/"
   application:
     name: FACT Cron Trigger
+  cloud:
+    openfeign:
+      oauth2:
+        enabled: false
+  security:
+    oauth2:
+      client:
+        registration:
+          fact-data-api:
+            authorization-grant-type: client_credentials
+            client-id: ${AZURE_CLIENT_ID:dummy-client-id}
+            client-secret: ${AZURE_CLIENT_SECRET:dummy-client-secret}
+            provider: azure-ad
+            scope: api://${AZURE_APP_REGISTRATION_ID:}/.default
+        provider:
+          azure-ad:
+            token-uri: https://login.microsoftonline.com/${AZURE_TENANT_ID:dummy-tenant}/oauth2/v2.0/token
 
 azure:
-  ad:
-    tenant-id: ${AZURE_TENANT_ID:}
-    client-id: ${AZURE_CLIENT_ID:}
-    client-secret: ${AZURE_CLIENT_SECRET:}
-    scope: api://${AZURE_APP_REGISTRATION_ID:}/.default
   blob:
     connection-string: ${STORAGE_ACCOUNT_CONNECTION_STRING:DefaultEndpointsProtocol=http;AccountName=factlocal;AccountKey=cmVmb3Jtc2NhbmtleQo=;BlobEndpoint=http://localhost:10000/factlocal;}
