@@ -10,7 +10,9 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import uk.gov.hmcts.reform.fact.factapi.FactClient;
+import uk.gov.hmcts.reform.fact.integrations.SlackMessageHelper;
 
 import java.time.Duration;
 import java.time.OffsetDateTime;
@@ -18,7 +20,10 @@ import java.time.ZoneOffset;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@SpringBootTest()
+@SpringBootTest(properties = {
+    "app.trigger-type=CSV",
+    "app.enabled=true",
+})
 class CsvCreationIntTest {
 
     @Autowired
@@ -29,6 +34,9 @@ class CsvCreationIntTest {
     private FactClient factClient;
     @Autowired
     private FactService factService;
+
+    @MockitoBean
+    private SlackMessageHelper slackMessageHelper;
 
     /**
      * Determine that the @SpringBootTest() annotation when launched created the new updated file in the
