@@ -10,9 +10,10 @@ public enum SlackNotificationConstants {
     USER_CLEANUP("FACT user cleanup", ":wastebasket:", ":warning:", "User cleanup failed: "),
     AUDIT_CLEANUP("FACT audit cleanup", ":wastebasket:", ":warning:", "Audit cleanup failed: ");
 
+    public static final String FAILURE_DETAILS_SUFFIX = " See application logs for details.";
+
     private final String serviceName;
     private final String successIcon;
     private final String failureIcon;
     private final String failurePrefix;
 }
-

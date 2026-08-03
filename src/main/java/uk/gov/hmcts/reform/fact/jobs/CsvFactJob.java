@@ -43,7 +43,7 @@ public class CsvFactJob implements FactJob {
             slackMessageHelper.sendDailyCheckSummary(
                 notification.getServiceName(),
                 notification.getFailureIcon(),
-                Optional.of(notification.getFailurePrefix() + ex.getMessage())
+                Optional.of(notification.getFailurePrefix() + SlackNotificationConstants.FAILURE_DETAILS_SUFFIX)
             );
             throw ex;
         }

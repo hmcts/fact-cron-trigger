@@ -6,7 +6,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import uk.gov.hmcts.reform.fact.integrations.SlackMessageHelper;
 import uk.gov.hmcts.reform.fact.integrations.SlackNotificationConstants;
-import uk.gov.hmcts.reform.fact.services.FactDataCleanupService;
+import uk.gov.hmcts.reform.fact.services.FactDataService;
 
 import java.util.Optional;
 
@@ -18,7 +18,7 @@ import static org.mockito.Mockito.verify;
 class UserCleanupJobTest {
 
     @Mock
-    private FactDataCleanupService cleanupService;
+    private FactDataService cleanupService;
 
     @Mock
     private SlackMessageHelper slackMessageHelper;
@@ -49,9 +49,10 @@ class UserCleanupJobTest {
         verify(slackMessageHelper).sendDailyCheckSummary(
             SlackNotificationConstants.USER_CLEANUP.getServiceName(),
             SlackNotificationConstants.USER_CLEANUP.getFailureIcon(),
-            Optional.of(SlackNotificationConstants.USER_CLEANUP.getFailurePrefix() + "boom")
+            Optional.of(
+                SlackNotificationConstants.USER_CLEANUP.getFailurePrefix()
+                    + SlackNotificationConstants.FAILURE_DETAILS_SUFFIX
+            )
         );
     }
 }
-
-

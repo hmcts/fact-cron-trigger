@@ -5,40 +5,41 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import uk.gov.hmcts.reform.fact.integrations.SlackMessageHelper;
 import uk.gov.hmcts.reform.fact.integrations.SlackNotificationConstants;
+import uk.gov.hmcts.reform.fact.services.CsvGenerationService;
 import uk.gov.hmcts.reform.fact.services.FactDataService;
 
 import java.util.Optional;
 
 @Component
 @Slf4j
-public class AuditCleanupJob implements FactJob {
+public class CsvGenarationJob implements FactJob {
 
     private final FactDataService factDataService;
     private final SlackMessageHelper slackMessageHelper;
 
-    public AuditCleanupJob(@Autowired FactDataService factDataService,
-                           @Autowired SlackMessageHelper slackMessageHelper) {
+    public CsvGenarationJob(@Autowired CsvGenerationService csvGenerationService, FactDataService factDataService,
+                            @Autowired SlackMessageHelper slackMessageHelper) {
         this.factDataService = factDataService;
         this.slackMessageHelper = slackMessageHelper;
     }
 
     @Override
     public boolean isApplicable(ScheduleTypes scheduleType) {
-        return ScheduleTypes.AUDIT_CLEANUP == scheduleType;
+        return ScheduleTypes.CSV_GENERATION_NEW == scheduleType;
     }
 
     @Override
     public void execute() {
-        log.info("Running audit cleanup job");
-        SlackNotificationConstants notification = SlackNotificationConstants.AUDIT_CLEANUP;
+        log.info("Running CSV generation and upload job");
+        SlackNotificationConstants notification = SlackNotificationConstants.CSV;
         try {
-            factDataService.cleanupAudits();
+            factDataService.generateCSV();
             slackMessageHelper.sendDailyCheckSummary(
                 notification.getServiceName(),
                 notification.getSuccessIcon(),
                 Optional.empty()
             );
-            log.info("Finished audit cleanup job");
+            log.info("Finished CSV generation and upload job");
         } catch (RuntimeException ex) {
             slackMessageHelper.sendDailyCheckSummary(
                 notification.getServiceName(),

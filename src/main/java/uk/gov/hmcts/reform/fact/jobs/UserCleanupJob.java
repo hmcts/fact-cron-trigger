@@ -5,7 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import uk.gov.hmcts.reform.fact.integrations.SlackMessageHelper;
 import uk.gov.hmcts.reform.fact.integrations.SlackNotificationConstants;
-import uk.gov.hmcts.reform.fact.services.FactDataCleanupService;
+import uk.gov.hmcts.reform.fact.services.FactDataService;
 
 import java.util.Optional;
 
@@ -13,12 +13,12 @@ import java.util.Optional;
 @Slf4j
 public class UserCleanupJob implements FactJob {
 
-    private final FactDataCleanupService factDataCleanupService;
+    private final FactDataService factDataService;
     private final SlackMessageHelper slackMessageHelper;
 
-    public UserCleanupJob(@Autowired FactDataCleanupService factDataCleanupService,
+    public UserCleanupJob(@Autowired FactDataService factDataService,
                           @Autowired SlackMessageHelper slackMessageHelper) {
-        this.factDataCleanupService = factDataCleanupService;
+        this.factDataService = factDataService;
         this.slackMessageHelper = slackMessageHelper;
     }
 
@@ -32,7 +32,7 @@ public class UserCleanupJob implements FactJob {
         log.info("Running user cleanup job");
         SlackNotificationConstants notification = SlackNotificationConstants.USER_CLEANUP;
         try {
-            factDataCleanupService.cleanupUsers();
+            factDataService.cleanupUsers();
             slackMessageHelper.sendDailyCheckSummary(
                 notification.getServiceName(),
                 notification.getSuccessIcon(),
@@ -43,7 +43,7 @@ public class UserCleanupJob implements FactJob {
             slackMessageHelper.sendDailyCheckSummary(
                 notification.getServiceName(),
                 notification.getFailureIcon(),
-                Optional.of(notification.getFailurePrefix() + ex.getMessage())
+                Optional.of(notification.getFailurePrefix() + SlackNotificationConstants.FAILURE_DETAILS_SUFFIX)
             );
             throw ex;
         }

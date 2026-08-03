@@ -49,9 +49,10 @@ class CsvFactJobTest {
         verify(slackMessageHelper).sendDailyCheckSummary(
             SlackNotificationConstants.CSV.getServiceName(),
             SlackNotificationConstants.CSV.getFailureIcon(),
-            Optional.of(SlackNotificationConstants.CSV.getFailurePrefix() + "boom")
+            Optional.of(
+                SlackNotificationConstants.CSV.getFailurePrefix()
+                    + SlackNotificationConstants.FAILURE_DETAILS_SUFFIX
+            )
         );
     }
 }
-
-

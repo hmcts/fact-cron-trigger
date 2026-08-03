@@ -10,14 +10,14 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 
 @ExtendWith(MockitoExtension.class)
-class FactDataCleanupServiceTest {
+class FactDataServiceTest {
 
     @Mock
     private FactDataApiClient factDataApiClient;
 
     @Test
     void shouldDeleteAudits() {
-        FactDataCleanupService service = new FactDataCleanupService(factDataApiClient);
+        FactDataService service = new FactDataService(factDataApiClient);
 
         service.cleanupAudits();
 

@@ -5,11 +5,11 @@ import org.springframework.stereotype.Service;
 import uk.gov.hmcts.reform.fact.factapi.FactDataApiClient;
 
 @Service
-public class FactDataCleanupService {
+public class FactDataService {
 
     private final FactDataApiClient factDataApiClient;
 
-    public FactDataCleanupService(@Autowired FactDataApiClient factDataApiClient) {
+    public FactDataService(@Autowired FactDataApiClient factDataApiClient) {
         this.factDataApiClient = factDataApiClient;
     }
 
@@ -19,6 +19,10 @@ public class FactDataCleanupService {
 
     public void cleanupAudits() {
         factDataApiClient.deleteAudits();
+    }
+
+    public void generateCSV() {
+        factDataApiClient.createAndUploadCsv();
     }
 }
 
