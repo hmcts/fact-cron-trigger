@@ -32,7 +32,7 @@ slack:
 
 spring:
   config:
-    import: "optional:configtree:/mnt/secrets/fact/"
+    import: "optional:configtree:/mnt/secrets/*/"
   application:
     name: FACT Cron Trigger
   cloud:
