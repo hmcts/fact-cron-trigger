@@ -5,7 +5,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import uk.gov.hmcts.reform.fact.integrations.SlackMessageHelper;
 import uk.gov.hmcts.reform.fact.integrations.SlackNotificationConstants;
-import uk.gov.hmcts.reform.fact.services.CsvGenerationService;
 import uk.gov.hmcts.reform.fact.services.FactDataService;
 
 import java.util.Optional;
@@ -17,7 +16,7 @@ public class CsvGenarationJob implements FactJob {
     private final FactDataService factDataService;
     private final SlackMessageHelper slackMessageHelper;
 
-    public CsvGenarationJob(@Autowired CsvGenerationService csvGenerationService, FactDataService factDataService,
+    public CsvGenarationJob(@Autowired FactDataService factDataService,
                             @Autowired SlackMessageHelper slackMessageHelper) {
         this.factDataService = factDataService;
         this.slackMessageHelper = slackMessageHelper;

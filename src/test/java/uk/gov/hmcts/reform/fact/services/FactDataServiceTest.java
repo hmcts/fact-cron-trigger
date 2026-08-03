@@ -16,6 +16,16 @@ class FactDataServiceTest {
     private FactDataApiClient factDataApiClient;
 
     @Test
+    void shouldDeleteUsers() {
+        FactDataService service = new FactDataService(factDataApiClient);
+
+        service.cleanupUsers();
+
+        verify(factDataApiClient).deleteUsers();
+        verifyNoMoreInteractions(factDataApiClient);
+    }
+
+    @Test
     void shouldDeleteAudits() {
         FactDataService service = new FactDataService(factDataApiClient);
 
@@ -24,8 +34,14 @@ class FactDataServiceTest {
         verify(factDataApiClient).deleteAudits();
         verifyNoMoreInteractions(factDataApiClient);
     }
+
+    @Test
+    void shouldGenerateCsv() {
+        FactDataService service = new FactDataService(factDataApiClient);
+
+        service.generateCSV();
+
+        verify(factDataApiClient).createAndUploadCsv();
+        verifyNoMoreInteractions(factDataApiClient);
+    }
 }
-
-
-
-
