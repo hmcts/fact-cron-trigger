@@ -45,13 +45,13 @@ spring:
         registration:
           fact-data-api:
             authorization-grant-type: client_credentials
-            client-id: ${AZURE_CLIENT_ID:dummy-client-id}
-            client-secret: ${AZURE_CLIENT_SECRET:dummy-client-secret}
+            client-id: ${FACT_CRON_TRIGGER_CLIENT_ID}
+            client-secret: ${FACT_CRON_TRIGGER_CLIENT_SECRET}
             provider: azure-ad
-            scope: api://${AZURE_APP_REGISTRATION_ID:}/.default
+            scope: api://${FACT_DATA_API_APP_REGISTRATION_ID}/.default
         provider:
           azure-ad:
-            token-uri: https://login.microsoftonline.com/${AZURE_TENANT_ID:dummy-tenant}/oauth2/v2.0/token
+            token-uri: https://login.microsoftonline.com/${AZURE_TENANT_ID}/oauth2/v2.0/token
 
 azure:
   blob:
