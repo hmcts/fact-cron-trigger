@@ -26,9 +26,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 @SpringBootTest(
     classes = FactDataApiAuthIntTestConfig.class,
     properties = {
-        "spring.security.oauth2.client.registration.fact-data-api.client-id=${AZURE_CLIENT_ID:}",
+        "spring.security.oauth2.client.registration.fact-data-api.client-id=${FACT_CRON_TRIGGER_CLIENT_ID:}",
         "spring.security.oauth2.client.registration.fact-data-api.client-secret"
-            + "=${AZURE_CLIENT_SECRET:}",
+            + "=${FACT_CRON_TRIGGER_CLIENT_SECRET:}",
         "spring.security.oauth2.client.provider.azure-ad.token-uri="
             + "${FACT_DATA_API_TOKEN_URI:}"
     }
@@ -188,7 +188,6 @@ class FactDataApiAuthIntTest {
     }
 
 }
-
 
 
 

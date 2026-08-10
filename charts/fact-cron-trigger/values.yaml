@@ -4,20 +4,18 @@ job:
   keyVaults:
     fact:
       secrets:
-        - name: AppInsightsInstrumentationKey
-          alias: azure.application-insights.instrumentation-key
+        - name: app-insights-connection-string-ai
+          alias: app-insights-connection-string
         - name: storage-account-connection-string
           alias: STORAGE_ACCOUNT_CONNECTION_STRING
     fact-kv:
       secrets:
-        - name: bstrap-sso-tenant-id
-          alias: AZURE_TENANT_ID
         - name: fact-cron-trigger-app-reg-id
-          alias: AZURE_CLIENT_ID
+          alias: FACT_CRON_TRIGGER_CLIENT_ID
         - name: bstrap-cron-trigger-client-secret
-          alias: AZURE_CLIENT_SECRET
+          alias: FACT_CRON_TRIGGER_CLIENT_SECRET
         - name: api-app-reg-id
-          alias: AZURE_APP_REGISTRATION_ID
+          alias: FACT_DATA_API_APP_REGISTRATION_ID
         - name: bstrap-slack-token
           alias: SLACK_TOKEN
         - name: bstrap-slack-channel-id
