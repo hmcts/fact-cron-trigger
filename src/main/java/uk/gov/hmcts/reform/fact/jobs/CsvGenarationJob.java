@@ -30,7 +30,7 @@ public class CsvGenarationJob implements FactJob {
     @Override
     public void execute() {
         log.info("Running CSV generation and upload job");
-        SlackNotificationConstants notification = SlackNotificationConstants.CSV;
+        SlackNotificationConstants notification = SlackNotificationConstants.CSV_GENERATION;
         try {
             factDataService.generateCSV();
             slackMessageHelper.sendDailyCheckSummary(

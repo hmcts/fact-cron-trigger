@@ -40,8 +40,8 @@ class CsvGenarationJobTest {
 
         verify(factDataService).generateCSV();
         verify(slackMessageHelper).sendDailyCheckSummary(
-            SlackNotificationConstants.CSV.getServiceName(),
-            SlackNotificationConstants.CSV.getSuccessIcon(),
+            SlackNotificationConstants.CSV_GENERATION.getServiceName(),
+            SlackNotificationConstants.CSV_GENERATION.getSuccessIcon(),
             Optional.empty()
         );
     }
@@ -56,10 +56,10 @@ class CsvGenarationJobTest {
             .hasMessage("boom");
 
         verify(slackMessageHelper).sendDailyCheckSummary(
-            SlackNotificationConstants.CSV.getServiceName(),
-            SlackNotificationConstants.CSV.getFailureIcon(),
+            SlackNotificationConstants.CSV_GENERATION.getServiceName(),
+            SlackNotificationConstants.CSV_GENERATION.getFailureIcon(),
             Optional.of(
-                SlackNotificationConstants.CSV.getFailurePrefix()
+                SlackNotificationConstants.CSV_GENERATION.getFailurePrefix()
                     + SlackNotificationConstants.FAILURE_DETAILS_SUFFIX
             )
         );

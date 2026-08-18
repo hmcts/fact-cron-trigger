@@ -27,8 +27,8 @@ class CsvGenarationJobIntTest {
     void shouldExecuteCsvGenerationNewJobOnStartup() {
         verify(factDataApiClient).createAndUploadCsv();
         verify(slackMessageHelper).sendDailyCheckSummary(
-            SlackNotificationConstants.CSV.getServiceName(),
-            SlackNotificationConstants.CSV.getSuccessIcon(),
+            SlackNotificationConstants.CSV_GENERATION.getServiceName(),
+            SlackNotificationConstants.CSV_GENERATION.getSuccessIcon(),
             Optional.empty()
         );
     }
