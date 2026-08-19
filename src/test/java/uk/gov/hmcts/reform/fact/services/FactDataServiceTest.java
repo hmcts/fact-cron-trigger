@@ -10,22 +10,38 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 
 @ExtendWith(MockitoExtension.class)
-class FactDataCleanupServiceTest {
+class FactDataServiceTest {
 
     @Mock
     private FactDataApiClient factDataApiClient;
 
     @Test
+    void shouldDeleteUsers() {
+        FactDataService service = new FactDataService(factDataApiClient);
+
+        service.cleanupUsers();
+
+        verify(factDataApiClient).deleteUsers();
+        verifyNoMoreInteractions(factDataApiClient);
+    }
+
+    @Test
     void shouldDeleteAudits() {
-        FactDataCleanupService service = new FactDataCleanupService(factDataApiClient);
+        FactDataService service = new FactDataService(factDataApiClient);
 
         service.cleanupAudits();
 
         verify(factDataApiClient).deleteAudits();
         verifyNoMoreInteractions(factDataApiClient);
     }
+
+    @Test
+    void shouldGenerateCsv() {
+        FactDataService service = new FactDataService(factDataApiClient);
+
+        service.generateCSV();
+
+        verify(factDataApiClient).createAndUploadCsv();
+        verifyNoMoreInteractions(factDataApiClient);
+    }
 }
-
-
-
-

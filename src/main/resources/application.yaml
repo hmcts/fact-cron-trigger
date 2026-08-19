@@ -26,6 +26,7 @@ fact-data-api:
   endpoint:
     delete-audits: /audits/v1
     delete-users: /user/v1/retention
+    create-and-upload-csv: /csv/
 slack:
   token-daily-checks: ${SLACK_TOKEN}
   channel-id-daily-checks: ${SLACK_CHANNEL_ID}
