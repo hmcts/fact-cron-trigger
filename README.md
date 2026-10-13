@@ -33,11 +33,11 @@ In practice, the service is usually containerized within a hosted kubernetes env
 
 ##### General
 
-- [Java JDK 21](https://openjdk.org/projects/jdk/21/) - this is used throughout all of our services.
+- [Java JDK 25](https://openjdk.org/projects/jdk/25/) - required to build and run this service.
 
 ##### Local development
 
-No specific requirements, other than the standard IDE and Java 21.
+No specific requirements, other than the standard IDE and Java 25. Set `JAVA_HOME` to your JDK 25 installation.
 
 ### Installation
 
