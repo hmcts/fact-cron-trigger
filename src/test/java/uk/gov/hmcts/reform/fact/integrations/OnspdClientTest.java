@@ -98,11 +98,12 @@ class OnspdClientTest {
     void shouldGetFilteredRecordCount() {
         OnspdRelease release = release("https://services.test/aug/FeatureServer");
         server.expect(requestTo(org.hamcrest.Matchers.containsString("/0/query")))
-            .andExpect(request -> assertThat(request.getURI().getQuery()).contains(OnspdClient.RECORD_FILTER))
+            .andExpect(request -> assertThat(request.getURI().getQuery())
+                .contains(OnspdClient.POSTCODE_SELECTION_FILTER))
             .andExpect(queryParam("returnCountOnly", "true"))
             .andRespond(withSuccess("{\"count\":993979}", MediaType.APPLICATION_JSON));
 
-        assertThat(client.getRecordCount(release)).isEqualTo(993_979);
+        assertThat(client.getFilteredPostcodeCount(release)).isEqualTo(993_979);
         server.verify();
     }
 
@@ -112,7 +113,7 @@ class OnspdClientTest {
         server.expect(requestTo(org.hamcrest.Matchers.containsString("/0/query")))
             .andRespond(withSuccess("{\"count\":\"invalid\"}", MediaType.APPLICATION_JSON));
 
-        assertThatThrownBy(() -> client.getRecordCount(release))
+        assertThatThrownBy(() -> client.getFilteredPostcodeCount(release))
             .isInstanceOf(OnspdImportException.class)
             .hasMessageContaining("valid count");
         server.verify();
@@ -122,15 +123,15 @@ class OnspdClientTest {
     void shouldGetOnlyRequiredFieldsForPage() {
         OnspdRelease release = release("https://services.test/aug/FeatureServer");
         server.expect(requestTo(org.hamcrest.Matchers.containsString("/0/query")))
-            .andExpect(queryParam("outFields", OnspdClient.REQUIRED_FIELDS))
+            .andExpect(queryParam("outFields", OnspdClient.POSTCODE_FIELDS))
             .andExpect(request -> assertThat(request.getURI().getQuery())
-                .contains("(" + OnspdClient.RECORD_FILTER + ") AND ObjectId > 2"))
+                .contains("(" + OnspdClient.POSTCODE_SELECTION_FILTER + ") AND ObjectId > 2"))
             .andExpect(queryParam("resultRecordCount", "2"))
             .andRespond(withSuccess("""
                 {"features":[{"attributes":{"pcds":"G2 8GT","usrtypind":1}}]}
                 """, MediaType.APPLICATION_JSON));
 
-        List<JsonNode> records = client.getRecords(release, 2);
+        List<JsonNode> records = client.getPostcodeRecordsAfter(release, 2);
 
         assertThat(records).hasSize(1);
         assertThat(records.getFirst().path("pcds").asText()).isEqualTo("G2 8GT");
@@ -148,7 +149,7 @@ class OnspdClientTest {
         server.expect(requestTo(org.hamcrest.Matchers.containsString("/0/query")))
             .andRespond(withSuccess("{\"features\":[]}", MediaType.APPLICATION_JSON));
 
-        assertThat(client.getRecords(release, 300_000)).isEmpty();
+        assertThat(client.getPostcodeRecordsAfter(release, 300_000)).isEmpty();
         server.verify();
     }
 
@@ -163,7 +164,7 @@ class OnspdClientTest {
         server.expect(requestTo(org.hamcrest.Matchers.containsString("/0/query")))
             .andRespond(withSuccess(error, MediaType.APPLICATION_JSON));
 
-        assertThatThrownBy(() -> client.getRecords(release, 300_000))
+        assertThatThrownBy(() -> client.getPostcodeRecordsAfter(release, 300_000))
             .isInstanceOf(OnspdImportException.class)
             .hasMessageContaining("code 500")
             .hasMessageContaining("Try again later");
@@ -174,7 +175,7 @@ class OnspdClientTest {
     void shouldRejectUnexpectedServiceHost() {
         OnspdRelease release = release("https://unexpected.test/FeatureServer");
 
-        assertThatThrownBy(() -> client.getRecordCount(release))
+        assertThatThrownBy(() -> client.getFilteredPostcodeCount(release))
             .isInstanceOf(OnspdImportException.class)
             .hasMessageContaining("unexpected host");
     }

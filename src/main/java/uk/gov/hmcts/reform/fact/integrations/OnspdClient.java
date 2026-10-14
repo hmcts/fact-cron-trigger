@@ -32,8 +32,9 @@ public class OnspdClient {
 
     static final String CATALOGUE_QUERY =
         "owner:ONSGeography_data AND tags:PRD_ONSPD AND type:\"Feature Service\"";
-    static final String RECORD_FILTER = "usrtypind = 1 OR doterm IS NOT NULL";
-    static final String REQUIRED_FIELDS = "ObjectId,pcds,dointr,doterm,usrtypind,gridind,lat,long";
+    // ArcGIS evaluates this SQL-like Feature Service expression remotely before returning JSON records.
+    static final String POSTCODE_SELECTION_FILTER = "usrtypind = 1 OR doterm IS NOT NULL";
+    static final String POSTCODE_FIELDS = "ObjectId,pcds,dointr,doterm,usrtypind,gridind,lat,long";
 
     private static final Pattern RELEASE_PATTERN = Pattern.compile(
         "\\((January|February|March|April|May|June|July|August|September|October|November|December) "
@@ -61,6 +62,13 @@ public class OnspdClient {
         this.properties = properties;
     }
 
+    /**
+     * Finds the most recent valid ONSPD hosted-table release in the ArcGIS catalogue.
+     * The release date is parsed from each title because catalogue creation order alone is not authoritative.
+     *
+     * @return latest valid ONSPD release
+     * @throws OnspdImportException if the catalogue cannot be read or contains no valid release
+     */
     public OnspdRelease findLatestRelease() {
         URI uri = UriComponentsBuilder.fromUriString(properties.getCatalogueUrl())
             .queryParam("f", "json")
@@ -82,8 +90,16 @@ public class OnspdClient {
             .orElseThrow(() -> new OnspdImportException("No ONSPD hosted-table release found in the catalogue"));
     }
 
-    public long getRecordCount(OnspdRelease release) {
-        URI uri = queryUri(release)
+    /**
+     * Counts the large-user and terminated postcodes selected for the reduced reference file.
+     * The count is used to detect incomplete or changing exports before a file is uploaded.
+     *
+     * @param release ONSPD release to query
+     * @return number of matching postcode records
+     * @throws OnspdImportException if ArcGIS cannot return a valid count
+     */
+    public long getFilteredPostcodeCount(OnspdRelease release) {
+        URI uri = filteredPostcodeQueryUri(release)
             .queryParam("returnCountOnly", true)
             .build()
             .encode()
@@ -96,13 +112,22 @@ public class OnspdClient {
         return response.path("count").asLong();
     }
 
-    public List<JsonNode> getRecords(OnspdRelease release, long lastObjectId) {
-        URI uri = queryUri(release)
-            .queryParam("outFields", REQUIRED_FIELDS)
+    /**
+     * Retrieves the next page of selected postcode attributes after the supplied object ID.
+     * Paging by object ID keeps query performance stable across the complete dataset.
+     *
+     * @param release ONSPD release to query
+     * @param lastObjectId final object ID processed from the preceding page
+     * @return postcode attributes ordered by object ID
+     * @throws OnspdImportException if ArcGIS cannot return the requested page
+     */
+    public List<JsonNode> getPostcodeRecordsAfter(OnspdRelease release, long lastObjectId) {
+        URI uri = filteredPostcodeQueryUri(release)
+            .queryParam("outFields", POSTCODE_FIELDS)
             .queryParam("returnGeometry", false)
             .queryParam("orderByFields", "ObjectId")
             .queryParam("resultRecordCount", properties.getPageSize())
-            .replaceQueryParam("where", "(" + RECORD_FILTER + ") AND ObjectId > " + lastObjectId)
+            .replaceQueryParam("where", postcodePageFilter(lastObjectId))
             .build()
             .encode()
             .toUri();
@@ -114,13 +139,39 @@ public class OnspdClient {
         return records;
     }
 
-    private UriComponentsBuilder queryUri(OnspdRelease release) {
+    /**
+     * Creates a query URI restricted to records required by the postcode reference file.
+     * Filtering within ArcGIS avoids transferring roughly the entire ONSPD dataset to the job.
+     *
+     * @param release ONSPD release to query
+     * @return URI builder containing the common ArcGIS query parameters
+     * @throws OnspdImportException if the release URL is not an approved HTTPS endpoint
+     */
+    private UriComponentsBuilder filteredPostcodeQueryUri(OnspdRelease release) {
         validateServiceUrl(release.serviceUrl());
         return UriComponentsBuilder.fromUriString(release.serviceUrl() + "/0/query")
             .queryParam("f", "json")
-            .queryParam("where", RECORD_FILTER);
+            .queryParam("where", POSTCODE_SELECTION_FILTER);
     }
 
+    /**
+     * Builds the ArcGIS filter for the next postcode page using keyset pagination.
+     * This avoids the performance degradation caused by increasingly high result offsets.
+     *
+     * @param lastObjectId final object ID processed from the preceding page
+     * @return ArcGIS where expression for the next page
+     */
+    private String postcodePageFilter(long lastObjectId) {
+        return "(" + POSTCODE_SELECTION_FILTER + ") AND ObjectId > " + lastObjectId;
+    }
+
+    /**
+     * Converts a catalogue result into a release only when its title and required fields are valid.
+     * Ignoring malformed results prevents an unrelated or incomplete catalogue item from being imported.
+     *
+     * @param result ArcGIS catalogue result
+     * @return parsed release, or empty when the result is not a valid ONSPD hosted table
+     */
     private Optional<OnspdRelease> toRelease(JsonNode result) {
         String title = result.path("title").asText();
         if (!title.startsWith("ONS Postcode Directory") || !title.contains("Hosted Table")) {
@@ -152,6 +203,15 @@ public class OnspdClient {
         }
     }
 
+    /**
+     * Performs an ArcGIS GET request with bounded retries and validates its JSON response.
+     * Retrying transient failures prevents a single remote error from aborting the daily import.
+     *
+     * @param uri ArcGIS endpoint to call
+     * @param operation description included in logs and exceptions
+     * @return validated response body
+     * @throws OnspdImportException when all attempts fail or ArcGIS returns an error response
+     */
     private JsonNode get(URI uri, String operation) {
         OnspdImportException lastFailure = null;
         int maxAttempts = Math.max(1, properties.getMaxAttempts());
@@ -183,6 +243,14 @@ public class OnspdClient {
         throw lastFailure;
     }
 
+    /**
+     * Applies exponential backoff between failed ArcGIS requests.
+     * Preserving the interrupted state allows application shutdown to proceed correctly.
+     *
+     * @param attempt number of the attempt that failed
+     * @param operation description included if the wait is interrupted
+     * @throws OnspdImportException if the retry wait is interrupted
+     */
     private void waitBeforeRetry(int attempt, String operation) {
         long delay = Math.max(0, properties.getInitialRetryBackoffMillis())
             * (1L << Math.min(attempt - 1, 10));
@@ -194,6 +262,13 @@ public class OnspdClient {
         }
     }
 
+    /**
+     * Ensures a catalogue-provided service URL uses HTTPS and the configured trusted host.
+     * This prevents catalogue data from directing the import job to an arbitrary endpoint.
+     *
+     * @param serviceUrl service URL supplied by the ArcGIS catalogue
+     * @throws OnspdImportException if the URL is invalid or is not an approved endpoint
+     */
     private void validateServiceUrl(String serviceUrl) {
         URI uri;
         try {
@@ -208,6 +283,14 @@ public class OnspdClient {
         }
     }
 
+    /**
+     * Converts an ArcGIS error object into an import exception containing its available details.
+     * ArcGIS can return HTTP success with an error in the JSON body, so status handling alone is insufficient.
+     *
+     * @param response ArcGIS JSON response
+     * @param operation description of the request being validated
+     * @throws OnspdImportException if the response contains an ArcGIS error object
+     */
     private void validateArcGisResponse(JsonNode response, String operation) {
         if (response.has("error")) {
             JsonNode error = response.path("error");

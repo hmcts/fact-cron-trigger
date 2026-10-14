@@ -38,12 +38,12 @@ class OnspdCsvServiceTest {
     @Test
     void shouldCreateReducedCsvForLargeUserAndTerminatedPostcodes() throws Exception {
         OnspdRelease release = release();
-        when(onspdClient.getRecordCount(release)).thenReturn(3L);
-        when(onspdClient.getRecords(release, 0)).thenReturn(List.of(
+        when(onspdClient.getFilteredPostcodeCount(release)).thenReturn(3L);
+        when(onspdClient.getPostcodeRecordsAfter(release, 0)).thenReturn(List.of(
             attributes(10, "G2  8GT", 201802, null, 1, 5, "55.858872", "-4.260375"),
             attributes(20, "AB1 0AA", 198001, 199606, 0, 1, "57.101459", "-2.242858")
         ));
-        when(onspdClient.getRecords(release, 20)).thenReturn(List.of(
+        when(onspdClient.getPostcodeRecordsAfter(release, 20)).thenReturn(List.of(
             attributes(35, "GY1 1AA", 199001, 202001, 1, 9, null, null)
         ));
         Path output = temporaryDirectory.resolve("postcode-reference.csv");
@@ -74,7 +74,7 @@ class OnspdCsvServiceTest {
     @Test
     void shouldRejectEmptyFilteredDataset() {
         OnspdRelease release = release();
-        when(onspdClient.getRecordCount(release)).thenReturn(0L);
+        when(onspdClient.getFilteredPostcodeCount(release)).thenReturn(0L);
 
         assertThatThrownBy(() -> new OnspdCsvService(onspdClient).createReducedCsv(
             release,
@@ -86,11 +86,11 @@ class OnspdCsvServiceTest {
     @Test
     void shouldRejectPaginationEndingBeforeExpectedCount() {
         OnspdRelease release = release();
-        when(onspdClient.getRecordCount(release)).thenReturn(2L);
-        when(onspdClient.getRecords(release, 0)).thenReturn(List.of(
+        when(onspdClient.getFilteredPostcodeCount(release)).thenReturn(2L);
+        when(onspdClient.getPostcodeRecordsAfter(release, 0)).thenReturn(List.of(
             attributes(10, "G2 8GT", 201802, null, 1, 5, "55.858872", "-4.260375")
         ));
-        when(onspdClient.getRecords(release, 10)).thenReturn(List.of());
+        when(onspdClient.getPostcodeRecordsAfter(release, 10)).thenReturn(List.of());
 
         assertThatThrownBy(() -> new OnspdCsvService(onspdClient).createReducedCsv(
             release,
@@ -102,8 +102,8 @@ class OnspdCsvServiceTest {
     @Test
     void shouldRejectRecordsOutsideRequestedFilter() {
         OnspdRelease release = release();
-        when(onspdClient.getRecordCount(release)).thenReturn(1L);
-        when(onspdClient.getRecords(release, 0)).thenReturn(List.of(
+        when(onspdClient.getFilteredPostcodeCount(release)).thenReturn(1L);
+        when(onspdClient.getPostcodeRecordsAfter(release, 0)).thenReturn(List.of(
             attributes(10, "AB1 0AA", 198001, null, 0, 1, "57.101459", "-2.242858")
         ));
 
@@ -117,8 +117,8 @@ class OnspdCsvServiceTest {
     @Test
     void shouldRejectNonAscendingObjectIds() {
         OnspdRelease release = release();
-        when(onspdClient.getRecordCount(release)).thenReturn(2L);
-        when(onspdClient.getRecords(release, 0)).thenReturn(List.of(
+        when(onspdClient.getFilteredPostcodeCount(release)).thenReturn(2L);
+        when(onspdClient.getPostcodeRecordsAfter(release, 0)).thenReturn(List.of(
             attributes(10, "G2 8GT", 201802, null, 1, 5, "55.858872", "-4.260375"),
             attributes(10, "M60 9DJ", 201802, null, 1, 5, "53.480759", "-2.242631")
         ));

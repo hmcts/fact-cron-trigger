@@ -45,7 +45,7 @@ public class OnspdCsvService {
     }
 
     public long createReducedCsv(OnspdRelease release, Path destination) {
-        long expectedRecordCount = onspdClient.getRecordCount(release);
+        long expectedRecordCount = onspdClient.getFilteredPostcodeCount(release);
         if (expectedRecordCount < 1) {
             throw new OnspdImportException("ONSPD query returned no large-user or terminated postcodes");
         }
@@ -59,7 +59,7 @@ public class OnspdCsvService {
                  .writeValues(outputStream)) {
 
             while (written < expectedRecordCount) {
-                List<JsonNode> records = onspdClient.getRecords(release, lastObjectId);
+                List<JsonNode> records = onspdClient.getPostcodeRecordsAfter(release, lastObjectId);
                 if (records.isEmpty()) {
                     throw new OnspdImportException(
                         "ONSPD pagination ended after " + written + " of " + expectedRecordCount + " records"
