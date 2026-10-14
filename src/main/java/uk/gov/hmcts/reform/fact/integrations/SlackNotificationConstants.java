@@ -9,7 +9,8 @@ public enum SlackNotificationConstants {
     CSV("Old FACT CSV generation", ":bar_chart:", ":warning:", "CSV generation failed: "),
     CSV_GENERATION("FACT CSV generation", ":bar_chart:", ":warning:", "CSV generation failed: "),
     USER_CLEANUP("FACT user cleanup", ":wastebasket:", ":warning:", "User cleanup failed: "),
-    AUDIT_CLEANUP("FACT audit cleanup", ":wastebasket:", ":warning:", "Audit cleanup failed: ");
+    AUDIT_CLEANUP("FACT audit cleanup", ":wastebasket:", ":warning:", "Audit cleanup failed: "),
+    ONSPD_IMPORT("ONSPD reference data", ":world_map:", ":warning:", "ONSPD import failed: ");
 
     public static final String FAILURE_DETAILS_SUFFIX = " See application logs for details.";
 

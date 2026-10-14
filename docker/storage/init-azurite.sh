@@ -6,3 +6,4 @@ SOURCE_CONNECTION_STRING="DefaultEndpointsProtocol=http;AccountName=factlocal;Ac
 
 az storage container create --name images --connection-string $SOURCE_CONNECTION_STRING
 az storage container create --name csv --connection-string $SOURCE_CONNECTION_STRING
+az storage container create --name onspd --connection-string $SOURCE_CONNECTION_STRING

@@ -57,3 +57,12 @@ spring:
 azure:
   blob:
     connection-string: ${STORAGE_ACCOUNT_CONNECTION_STRING:DefaultEndpointsProtocol=http;AccountName=factlocal;AccountKey=cmVmb3Jtc2NhbmtleQo=;BlobEndpoint=http://localhost:10000/factlocal;}
+
+onspd:
+  catalogue-url: ${ONSPD_CATALOGUE_URL}
+  allowed-service-host: ${ONSPD_ALLOWED_SERVICE_HOST}
+  container-name: ${ONSPD_CONTAINER_NAME:onspd}
+  blob-name: ${ONSPD_BLOB_NAME:postcode-reference.csv}
+  page-size: ${ONSPD_PAGE_SIZE:1000}
+  max-attempts: ${ONSPD_MAX_ATTEMPTS:4}
+  initial-retry-backoff-millis: ${ONSPD_INITIAL_RETRY_BACKOFF_MILLIS:1000}

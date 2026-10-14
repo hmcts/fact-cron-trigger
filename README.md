@@ -73,6 +73,13 @@ TODO: change below
 | ACCOUNT_MANAGEMENT_URL       | The URL for Account Management (Defaults to Staging)                                                            | No        |
 | PUBLICATION_SERVICES_URL     | The URL for Publication Services (Defaults to Staging)                                                          | No        |
 | TRIGGER_TYPE                 | The trigger type to use for the app. This is what determines what action is run. Must be one of 'ScheduleTypes' | Yes       |
+| ONSPD_CATALOGUE_URL          | ArcGIS catalogue search endpoint used to discover the latest official ONSPD hosted table                      | Yes       |
+| ONSPD_ALLOWED_SERVICE_HOST   | Allowed host for the hosted-table URL returned by the ONS catalogue                                          | Yes       |
+| ONSPD_CONTAINER_NAME         | Blob container for the reduced ONSPD reference CSV; defaults to `onspd`                                      | No        |
+| ONSPD_BLOB_NAME              | Fixed blob name for the reduced CSV; defaults to `postcode-reference.csv`                                    | No        |
+| ONSPD_PAGE_SIZE              | Number of ONSPD rows requested per hosted-table page; defaults to `1000`                                     | No        |
+| ONSPD_MAX_ATTEMPTS           | Maximum attempts for a failed ArcGIS request; defaults to `4`                                                | No        |
+| ONSPD_INITIAL_RETRY_BACKOFF_MILLIS | Initial retry delay, doubled after each failed attempt; defaults to `1000`                              | No        |
 
 #### Application.yaml files
 The service can also be adapted using the yaml files found in the following locations:
@@ -92,6 +99,26 @@ this can be done in the [CNP Jenkins repo](https://github.com/hmcts/cnp-jenkins-
 
 The cron timings of this trigger are configured in the Helm Charts. When running in Azure,
 timings are set to alternate on each cluster to ensure duplicate jobs are not run.
+
+The ONSPD import is selected with `TRIGGER_TYPE=ONSPD_IMPORT`. It should be deployed as a separate
+daily CronJob release, following the existing per-trigger Flux releases, for example:
+
+```yaml
+job:
+  schedule: "0 8 * * *"
+  environment:
+    TRIGGER_TYPE: ONSPD_IMPORT
+    TRIGGER_ENABLED: true
+```
+
+On each run the job searches the official ONS ArcGIS catalogue for the most recent ONSPD hosted
+table. If its item ID and modified timestamp match the metadata on the existing blob, the job exits without downloading
+postcode data or sending Slack noise. For a new release, the hosted table is queried for only current
+large-user and terminated postcodes and only these source fields: `pcds`, `dointr`, `doterm`,
+`usrtypind`, `gridind`, `lat`, and `long`. The generated `onspd/postcode-reference.csv` has the schema
+expected by `fact-data-api` and records the source item ID, release, and row count as blob metadata.
+The export uses `ObjectId` keyset pagination to avoid slower high-offset queries and retries transient
+ArcGIS failures with exponential backoff.
 
 ## Monitoring and Logging
 We utilise [Azure Application Insights](https://learn.microsoft.com/en-us/azure/azure-monitor/app/app-insights-overview) to store our logs. Ask a teammate for the specific resource in Azure to access these.
