@@ -4,11 +4,12 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import uk.gov.hmcts.reform.fact.factapi.FactDataApiClient;
 import uk.gov.hmcts.reform.fact.integrations.SlackMessageHelper;
 import uk.gov.hmcts.reform.fact.integrations.SlackNotificationConstants;
-import uk.gov.hmcts.reform.fact.models.OnspdUpdateResult;
-import uk.gov.hmcts.reform.fact.services.OnspdService;
+import uk.gov.hmcts.reform.fact.models.PostcodeReferenceSynchronisationResult;
 
+import java.time.Instant;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -23,25 +24,23 @@ import static org.mockito.Mockito.when;
 class OnspdImportJobTest {
 
     @Mock
-    private OnspdService onspdService;
+    private FactDataApiClient factDataApiClient;
 
     @Mock
     private SlackMessageHelper slackMessageHelper;
 
     @Test
-    void shouldApplyToOnspdImportSchedule() {
-        OnspdImportJob job = new OnspdImportJob(onspdService, slackMessageHelper);
+    void appliesOnlyToOnspdImportSchedule() {
+        OnspdImportJob job = new OnspdImportJob(factDataApiClient, slackMessageHelper);
 
         assertThat(job.isApplicable(ScheduleTypes.ONSPD_IMPORT)).isTrue();
         assertThat(job.isApplicable(ScheduleTypes.CSV)).isFalse();
     }
 
     @Test
-    void shouldNotifySlackAfterUploadingNewRelease() {
-        when(onspdService.updateIfRequired()).thenReturn(
-            OnspdUpdateResult.updated("2026-08", 993_979, "onspd/postcode-reference.csv")
-        );
-        OnspdImportJob job = new OnspdImportJob(onspdService, slackMessageHelper);
+    void notifiesSlackAfterSynchronisingRelease() {
+        when(factDataApiClient.synchronisePostcodeReference()).thenReturn(result(true, true));
+        OnspdImportJob job = new OnspdImportJob(factDataApiClient, slackMessageHelper);
 
         job.execute();
 
@@ -50,11 +49,19 @@ class OnspdImportJobTest {
     }
 
     @Test
-    void shouldNotNotifySlackWhenReleaseIsUnchanged() {
-        when(onspdService.updateIfRequired()).thenReturn(
-            OnspdUpdateResult.unchanged("2026-08", "onspd/postcode-reference.csv")
-        );
-        OnspdImportJob job = new OnspdImportJob(onspdService, slackMessageHelper);
+    void notifiesSlackWhenExistingBlobWasImported() {
+        when(factDataApiClient.synchronisePostcodeReference()).thenReturn(result(false, true));
+        OnspdImportJob job = new OnspdImportJob(factDataApiClient, slackMessageHelper);
+
+        job.execute();
+
+        verify(slackMessageHelper).sendLongMessage(contains("2026-08"));
+    }
+
+    @Test
+    void doesNotNotifySlackWhenReleaseAndDatabaseAreCurrent() {
+        when(factDataApiClient.synchronisePostcodeReference()).thenReturn(result(false, false));
+        OnspdImportJob job = new OnspdImportJob(factDataApiClient, slackMessageHelper);
 
         job.execute();
 
@@ -62,9 +69,9 @@ class OnspdImportJobTest {
     }
 
     @Test
-    void shouldNotifySlackAndRethrowWhenImportFails() {
-        doThrow(new IllegalStateException("boom")).when(onspdService).updateIfRequired();
-        OnspdImportJob job = new OnspdImportJob(onspdService, slackMessageHelper);
+    void notifiesSlackAndRethrowsWhenSynchronisationFails() {
+        doThrow(new IllegalStateException("boom")).when(factDataApiClient).synchronisePostcodeReference();
+        OnspdImportJob job = new OnspdImportJob(factDataApiClient, slackMessageHelper);
 
         assertThatThrownBy(job::execute)
             .isInstanceOf(IllegalStateException.class)
@@ -77,6 +84,18 @@ class OnspdImportJobTest {
                 SlackNotificationConstants.ONSPD_IMPORT.getFailurePrefix()
                     + SlackNotificationConstants.FAILURE_DETAILS_SUFFIX
             )
+        );
+    }
+
+    private PostcodeReferenceSynchronisationResult result(boolean blobUpdated, boolean imported) {
+        return new PostcodeReferenceSynchronisationResult(
+            blobUpdated,
+            imported,
+            "aug:3",
+            "2026-08",
+            993_979,
+            "onspd/postcode-reference.csv",
+            Instant.parse("2026-10-20T09:00:00Z")
         );
     }
 }

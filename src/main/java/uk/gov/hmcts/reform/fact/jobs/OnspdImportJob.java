@@ -2,10 +2,10 @@ package uk.gov.hmcts.reform.fact.jobs;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
+import uk.gov.hmcts.reform.fact.factapi.FactDataApiClient;
 import uk.gov.hmcts.reform.fact.integrations.SlackMessageHelper;
 import uk.gov.hmcts.reform.fact.integrations.SlackNotificationConstants;
-import uk.gov.hmcts.reform.fact.models.OnspdUpdateResult;
-import uk.gov.hmcts.reform.fact.services.OnspdService;
+import uk.gov.hmcts.reform.fact.models.PostcodeReferenceSynchronisationResult;
 
 import java.util.Optional;
 
@@ -13,11 +13,11 @@ import java.util.Optional;
 @Slf4j
 public class OnspdImportJob implements FactJob {
 
-    private final OnspdService onspdService;
+    private final FactDataApiClient factDataApiClient;
     private final SlackMessageHelper slackMessageHelper;
 
-    public OnspdImportJob(OnspdService onspdService, SlackMessageHelper slackMessageHelper) {
-        this.onspdService = onspdService;
+    public OnspdImportJob(FactDataApiClient factDataApiClient, SlackMessageHelper slackMessageHelper) {
+        this.factDataApiClient = factDataApiClient;
         this.slackMessageHelper = slackMessageHelper;
     }
 
@@ -31,24 +31,24 @@ public class OnspdImportJob implements FactJob {
         log.info("Running ONSPD reference data import job");
         SlackNotificationConstants notification = SlackNotificationConstants.ONSPD_IMPORT;
         try {
-            OnspdUpdateResult result = onspdService.updateIfRequired();
-            if (result.updated()) {
+            PostcodeReferenceSynchronisationResult result = factDataApiClient.synchronisePostcodeReference();
+            if (result.blobUpdated() || result.imported()) {
                 slackMessageHelper.sendLongMessage(String.format(
-                    "*%s ONSPD reference data updated*%n"
-                        + "> Release `%s`: %,d large-user or terminated postcodes uploaded to `%s`.",
+                    "*%s ONSPD reference data synchronised*%n"
+                        + "> Release `%s`: %,d large-user or terminated postcodes available from `%s`.",
                     notification.getSuccessIcon(),
                     result.release(),
                     result.recordCount(),
                     result.blobPath()
                 ));
                 log.info(
-                    "Uploaded ONSPD release {} with {} records to {}",
+                    "Synchronised ONSPD release {} with {} records from {}",
                     result.release(),
                     result.recordCount(),
                     result.blobPath()
                 );
             } else {
-                log.info("No new ONSPD release found; latest release is {}", result.release());
+                log.info("ONSPD release {} is already synchronised", result.release());
             }
         } catch (RuntimeException ex) {
             slackMessageHelper.sendDailyCheckSummary(

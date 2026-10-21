@@ -32,7 +32,7 @@ services:
     volumes:
       - ./fact-azure-blob-data:/opt/azurite/folder
     ports:
-      - 10000:10000
+      - 10003:10000
   init-storage:
     build:
       context: ./docker/storage

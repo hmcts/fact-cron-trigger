@@ -4,7 +4,6 @@ import com.azure.storage.blob.BlobClient;
 import com.azure.storage.blob.BlobContainerClient;
 import com.azure.storage.blob.BlobServiceClient;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.azure.storage.blob.models.BlobProperties;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -16,9 +15,6 @@ import uk.gov.hmcts.reform.fact.models.StringMultipartFile;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.nio.file.Path;
-import java.util.Map;
-import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -27,7 +23,6 @@ import static org.mockito.Mockito.anyString;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.eq;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -110,60 +105,4 @@ class AzureServiceTest {
             AzureIOException.class).hasMessageContaining("Stream failure");
     }
 
-    @Test
-    void shouldUploadPathWithMetadata() {
-        Path path = Path.of("postcode-reference.csv");
-        Map<String, String> metadata = Map.of("onspdItemId", "aug-item");
-        when(blobServiceClient.getBlobContainerClient("onspd")).thenReturn(containerClient);
-        when(containerClient.getBlobClient("postcode-reference.csv")).thenReturn(blobClient);
-
-        azureService.uploadFile("onspd", "postcode-reference.csv", path, metadata);
-
-        verify(containerClient).createIfNotExists();
-        verify(blobClient).uploadFromFile(path.toString(), true);
-        verify(blobClient).setMetadata(metadata);
-    }
-
-    @Test
-    void shouldGetBlobMetadata() {
-        BlobProperties blobProperties = mock(BlobProperties.class);
-        when(blobServiceClient.getBlobContainerClient("onspd")).thenReturn(containerClient);
-        when(containerClient.exists()).thenReturn(true);
-        when(containerClient.getBlobClient("postcode-reference.csv")).thenReturn(blobClient);
-        when(blobClient.exists()).thenReturn(true);
-        when(blobClient.getProperties()).thenReturn(blobProperties);
-        when(blobProperties.getMetadata()).thenReturn(Map.of("onspdItemId", "aug-item"));
-
-        Optional<String> itemId = azureService.getBlobMetadata(
-            "onspd", "postcode-reference.csv", "onspdItemId"
-        );
-
-        assertThat(itemId).contains("aug-item");
-    }
-
-    @Test
-    void shouldReturnEmptyMetadataWhenContainerDoesNotExist() {
-        when(blobServiceClient.getBlobContainerClient("onspd")).thenReturn(containerClient);
-        when(containerClient.exists()).thenReturn(false);
-
-        Optional<String> itemId = azureService.getBlobMetadata(
-            "onspd", "postcode-reference.csv", "onspdItemId"
-        );
-
-        assertThat(itemId).isEmpty();
-    }
-
-    @Test
-    void shouldReturnEmptyMetadataWhenBlobDoesNotExist() {
-        when(blobServiceClient.getBlobContainerClient("onspd")).thenReturn(containerClient);
-        when(containerClient.exists()).thenReturn(true);
-        when(containerClient.getBlobClient("postcode-reference.csv")).thenReturn(blobClient);
-        when(blobClient.exists()).thenReturn(false);
-
-        Optional<String> itemId = azureService.getBlobMetadata(
-            "onspd", "postcode-reference.csv", "onspdItemId"
-        );
-
-        assertThat(itemId).isEmpty();
-    }
 }
