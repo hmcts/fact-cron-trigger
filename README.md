@@ -95,11 +95,11 @@ The cron timings of this trigger are configured in the Helm Charts. When running
 timings are set to alternate on each cluster to ensure duplicate jobs are not run.
 
 The ONSPD import is selected with `TRIGGER_TYPE=ONSPD_IMPORT`. It should be deployed as a separate
-daily CronJob release, following the existing per-trigger Flux releases, for example:
+weekday CronJob release, following the existing per-trigger Flux releases, for example:
 
 ```yaml
 job:
-  schedule: "0 8 * * *"
+  schedule: "0 8 * * 1-5"
   environment:
     TRIGGER_TYPE: ONSPD_IMPORT
     TRIGGER_ENABLED: true
