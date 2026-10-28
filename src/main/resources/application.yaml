@@ -62,4 +62,4 @@ spring:
 
 azure:
   blob:
-    connection-string: ${STORAGE_ACCOUNT_CONNECTION_STRING:DefaultEndpointsProtocol=http;AccountName=factlocal;AccountKey=cmVmb3Jtc2NhbmtleQo=;BlobEndpoint=http://localhost:10000/factlocal;}
+    connection-string: ${STORAGE_ACCOUNT_CONNECTION_STRING:DefaultEndpointsProtocol=http;AccountName=factlocal;AccountKey=cmVmb3Jtc2NhbmtleQo=;BlobEndpoint=http://localhost:10003/factlocal;}
