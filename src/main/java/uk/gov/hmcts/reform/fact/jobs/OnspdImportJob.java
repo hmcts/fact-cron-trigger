@@ -51,11 +51,15 @@ public class OnspdImportJob implements FactJob {
                 log.info("ONSPD release {} is already synchronised", result.release());
             }
         } catch (RuntimeException ex) {
-            slackMessageHelper.sendDailyCheckSummary(
-                notification.getServiceName(),
-                notification.getFailureIcon(),
-                Optional.of(notification.getFailurePrefix() + SlackNotificationConstants.FAILURE_DETAILS_SUFFIX)
-            );
+            try {
+                slackMessageHelper.sendDailyCheckSummary(
+                    notification.getServiceName(),
+                    notification.getFailureIcon(),
+                    Optional.of(notification.getFailurePrefix() + SlackNotificationConstants.FAILURE_DETAILS_SUFFIX)
+                );
+            } catch (RuntimeException notificationFailure) {
+                ex.addSuppressed(notificationFailure);
+            }
             throw ex;
         }
     }
