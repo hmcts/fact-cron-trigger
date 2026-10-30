@@ -50,4 +50,5 @@ public class AzureService {
         blobClient.upload(file.getInputStream(), file.getSize(), true);
         log.info("Uploaded file {} to {}", file.getOriginalFilename(), containerName);
     }
+
 }

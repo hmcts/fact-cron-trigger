@@ -73,6 +73,7 @@ TODO: change below
 | ACCOUNT_MANAGEMENT_URL       | The URL for Account Management (Defaults to Staging)                                                            | No        |
 | PUBLICATION_SERVICES_URL     | The URL for Publication Services (Defaults to Staging)                                                          | No        |
 | TRIGGER_TYPE                 | The trigger type to use for the app. This is what determines what action is run. Must be one of 'ScheduleTypes' | Yes       |
+| FACT_DATA_API_READ_TIMEOUT_MILLIS | Read timeout for data-api requests; defaults to 15 minutes to allow the ONSPD synchronisation to complete | No |
 
 #### Application.yaml files
 The service can also be adapted using the yaml files found in the following locations:
@@ -92,6 +93,22 @@ this can be done in the [CNP Jenkins repo](https://github.com/hmcts/cnp-jenkins-
 
 The cron timings of this trigger are configured in the Helm Charts. When running in Azure,
 timings are set to alternate on each cluster to ensure duplicate jobs are not run.
+
+The ONSPD import is selected with `TRIGGER_TYPE=ONSPD_IMPORT`. It should be deployed as a separate
+weekday CronJob release, following the existing per-trigger Flux releases, for example:
+
+```yaml
+job:
+  schedule: "0 8 * * 1-5"
+  environment:
+    TRIGGER_TYPE: ONSPD_IMPORT
+    TRIGGER_ENABLED: true
+```
+
+On each run the job makes an authenticated request to the fact-data-api postcode-reference
+synchronisation endpoint. Data-api owns source discovery, CSV generation, blob storage and the database
+import. Cron-trigger only reports whether anything changed and sends the usual failure notification if
+the request fails.
 
 ## Monitoring and Logging
 We utilise [Azure Application Insights](https://learn.microsoft.com/en-us/azure/azure-monitor/app/app-insights-overview) to store our logs. Ask a teammate for the specific resource in Azure to access these.

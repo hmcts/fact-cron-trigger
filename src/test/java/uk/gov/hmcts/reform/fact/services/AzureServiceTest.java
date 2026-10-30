@@ -104,4 +104,5 @@ class AzureServiceTest {
         )).isInstanceOf(
             AzureIOException.class).hasMessageContaining("Stream failure");
     }
+
 }

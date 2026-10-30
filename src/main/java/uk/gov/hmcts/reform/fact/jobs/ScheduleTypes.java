@@ -4,5 +4,6 @@ public enum ScheduleTypes {
     CSV,
     USER_CLEANUP,
     AUDIT_CLEANUP,
-    CSV_GENERATION_NEW
+    CSV_GENERATION_NEW,
+    ONSPD_IMPORT
 }

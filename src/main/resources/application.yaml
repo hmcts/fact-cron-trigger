@@ -27,6 +27,7 @@ fact-data-api:
     delete-audits: /audits/v1
     delete-users: /user/v1/retention
     create-and-upload-csv: /csv/
+    synchronise-postcode-reference: /postcode-reference/v1/synchronise
 slack:
   token-daily-checks: ${SLACK_TOKEN}
   channel-id-daily-checks: ${SLACK_CHANNEL_ID}
@@ -40,6 +41,11 @@ spring:
     openfeign:
       oauth2:
         enabled: false
+      client:
+        config:
+          factDataApi:
+            connect-timeout: ${FACT_DATA_API_CONNECT_TIMEOUT_MILLIS:5000}
+            read-timeout: ${FACT_DATA_API_READ_TIMEOUT_MILLIS:900000}
   security:
     oauth2:
       client:
@@ -56,4 +62,4 @@ spring:
 
 azure:
   blob:
-    connection-string: ${STORAGE_ACCOUNT_CONNECTION_STRING:DefaultEndpointsProtocol=http;AccountName=factlocal;AccountKey=cmVmb3Jtc2NhbmtleQo=;BlobEndpoint=http://localhost:10000/factlocal;}
+    connection-string: ${STORAGE_ACCOUNT_CONNECTION_STRING:DefaultEndpointsProtocol=http;AccountName=factlocal;AccountKey=cmVmb3Jtc2NhbmtleQo=;BlobEndpoint=http://localhost:10003/factlocal;}
