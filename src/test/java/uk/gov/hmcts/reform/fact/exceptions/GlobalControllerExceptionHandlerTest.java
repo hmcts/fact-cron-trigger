@@ -1,6 +1,5 @@
 package uk.gov.hmcts.reform.fact.exceptions;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
@@ -18,7 +17,7 @@ class GlobalControllerExceptionHandlerTest {
     }
 
     @Test
-    void shouldReturnInternalServerErrorWhenJsonConvertExceptionOccurs() throws JsonProcessingException {
+    void shouldReturnInternalServerErrorWhenJsonConvertExceptionOccurs() {
         JsonConvertException exception = new JsonConvertException("Conversion failed");
         ResponseEntity<String> response = exceptionHandler.handleJsonConvertException(exception);
         assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, response.getStatusCode());

@@ -2,9 +2,8 @@ package uk.gov.hmcts.reform.fact.services;
 
 import com.azure.storage.blob.BlobServiceClient;
 import com.azure.storage.blob.models.BlobProperties;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import tools.jackson.databind.JsonNode;
+import tools.jackson.databind.json.JsonMapper;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -63,10 +62,9 @@ class CsvCreationIntTest {
      * is deserialized and converted to the models. I.e. determine if anything is missing.
      * Will prevent data being omitted from the spreadsheet.
      *
-     * @throws JsonProcessingException Failure to deserialize the returning JsonNode
      */
     @Test
-    void compareFactAPIWithMethodToConvertToModel() throws JsonProcessingException {
+    void compareFactAPIWithMethodToConvertToModel() {
         // Get the Data from Fact Api endpoint
         String rawApiCourtData = factClient.getAllCourtData();
 
@@ -79,7 +77,7 @@ class CsvCreationIntTest {
         assertThat(
             StringUtils.difference(
                 rawApiCourtData,
-                new ObjectMapper().writeValueAsString(convertedModelList)
+                JsonMapper.builder().build().writeValueAsString(convertedModelList)
             )).isEmpty();
     }
 }

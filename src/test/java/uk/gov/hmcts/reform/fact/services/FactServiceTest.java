@@ -1,7 +1,8 @@
 package uk.gov.hmcts.reform.fact.services;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import tools.jackson.databind.JsonNode;
+import tools.jackson.databind.ObjectMapper;
+import tools.jackson.databind.json.JsonMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -28,7 +29,7 @@ class FactServiceTest {
     @InjectMocks
     private FactService factService;
 
-    private final ObjectMapper objectMapper = new ObjectMapper();
+    private final ObjectMapper objectMapper = JsonMapper.builder().build();
 
     @BeforeEach
     void setUp() {
@@ -47,7 +48,7 @@ class FactServiceTest {
         for (int i = 0; i < result.size(); i++) {
             JsonNode court = result.get(i);
 
-            String courtName = court.get("name").asText();
+            String courtName = court.get("name").asString();
             assertThat(courtName).isNotBlank();
 
             if (court.has("lat") && !court.get("lat").isNull()) {
@@ -65,10 +66,10 @@ class FactServiceTest {
             assertThat(court.get("displayed").asBoolean()).isIn(true, false); // Ensure it's either true or false
             assertThat(court.get("hideAols").asBoolean()).isIn(true, false);
 
-            if (court.has("dxNumber")) {
-                assertThat(court.get("dxNumber").asText()).isNotBlank();
+            if (court.hasNonNull("dxNumber")) {
+                assertThat(court.get("dxNumber").asString()).isNotBlank();
             } else {
-                assertThat(court.get("dxNumber").isNull()).isTrue();
+                assertThat(court.path("dxNumber").isNull()).isTrue();
             }
 
             if (court.has("distance")) {
@@ -86,13 +87,13 @@ class FactServiceTest {
                 if (address.has("addressLines")) {
                     assertThat(address.get("addressLines").isArray()).isTrue();
                     if (!address.get("addressLines").isEmpty()) {
-                        assertThat(address.get("addressLines").get(0).asText()).isNotBlank();
+                        assertThat(address.get("addressLines").get(0).asString()).isNotBlank();
                     }
                 }
 
-                assertThat(address.has("postcode") ? address.get("postcode").asText() : "").isNotNull();
-                assertThat(address.has("town") ? address.get("town").asText() : "").isNotNull();
-                assertThat(address.has("county") ? address.get("county").asText() : "").isNotNull();
+                assertThat(address.has("postcode") ? address.get("postcode").asString() : "").isNotNull();
+                assertThat(address.has("town") ? address.get("town").asString() : "").isNotNull();
+                assertThat(address.has("county") ? address.get("county").asString() : "").isNotNull();
                 assertThat(address.has("type")).isTrue();
                 assertThat(address.has("description")).isTrue();
                 assertThat(address.has("epimId")).isTrue();
