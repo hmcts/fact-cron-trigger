@@ -1,10 +1,8 @@
 package uk.gov.hmcts.reform.fact.utils;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.SerializationFeature;
-import com.fasterxml.jackson.dataformat.csv.CsvMapper;
-import com.fasterxml.jackson.dataformat.csv.CsvSchema;
+import tools.jackson.databind.JsonNode;
+import tools.jackson.dataformat.csv.CsvMapper;
+import tools.jackson.dataformat.csv.CsvSchema;
 import uk.gov.hmcts.reform.fact.exceptions.JsonConvertException;
 
 import java.util.ArrayList;
@@ -37,8 +35,7 @@ public class CsvUtil {
     }
 
     public CsvUtil() {
-        this.csvMapper = new CsvMapper();
-        this.csvMapper.enable(SerializationFeature.INDENT_OUTPUT);
+        this.csvMapper = CsvMapper.builder().build();
     }
 
     public String convertJsonToCsv(JsonNode jsonArrayNode) {
@@ -51,7 +48,7 @@ public class CsvUtil {
 
         try {
             return csvMapper.writer(schema).writeValueAsString(flatList);
-        } catch (RuntimeException | JsonProcessingException ex) {
+        } catch (RuntimeException ex) {
             throw new JsonConvertException("Failed to convert JSON to CSV: " + ex.getMessage());
         }
     }
@@ -77,16 +74,16 @@ public class CsvUtil {
     private Map<String, Object> flattenCourtNode(JsonNode node) {
         Map<String, Object> flatMap = new LinkedHashMap<>();
 
-        flatMap.put("name", node.path("name").asText());
+        flatMap.put("name", node.path("name").asString());
         flatMap.put("lat", node.path("lat").asDouble());
         flatMap.put("lon", node.path("lon").asDouble());
         flatMap.put("number", node.path("number").asInt());
         flatMap.put("cci_code", node.path("cci_code").asInt());
         flatMap.put("magistrate_code", node.path("magistrate_code").asInt());
-        flatMap.put("slug", node.path("slug").asText());
+        flatMap.put("slug", node.path("slug").asString());
         flatMap.put("types", stringifyArray(node.path("types")));
         flatMap.put("open", node.path("displayed").asBoolean());
-        flatMap.put("dx_number", node.path("dx_number").asText());
+        flatMap.put("dx_number", node.path("dx_number").asString());
 
         flatMap.put("areas_of_law", flattenAreasOfLaw(node.path("areas_of_law")));
         flatMap.put("addresses", flattenAddresses(node.path("addresses")));
@@ -146,7 +143,7 @@ public class CsvUtil {
         }
 
         List<String> lineList = new ArrayList<>();
-        lines.forEach(line -> lineList.add(line.asText()));
+        lines.forEach(line -> lineList.add(line.asString()));
         return String.join(", ", lineList);
     }
 
@@ -160,14 +157,14 @@ public class CsvUtil {
         JsonNode areas = fieldsOfLawNode.path("areas_of_law");
         if (areas.isArray() && !areas.isEmpty()) {
             List<String> names = new ArrayList<>();
-            areas.forEach(a -> names.add(a.asText()));
+            areas.forEach(a -> names.add(a.asString()));
             parts.add("Areas of Law: " + String.join(" | ", names));
         }
 
         JsonNode courts = fieldsOfLawNode.path("courts");
         if (courts.isArray() && !courts.isEmpty()) {
             List<String> names = new ArrayList<>();
-            courts.forEach(c -> names.add(c.asText()));
+            courts.forEach(c -> names.add(c.asString()));
             parts.add("Courts: " + String.join(" | ", names));
         }
 
@@ -179,13 +176,12 @@ public class CsvUtil {
             return "";
         }
         List<String> items = new ArrayList<>();
-        arrayNode.forEach(n -> items.add(n.asText()));
+        arrayNode.forEach(n -> items.add(n.asString()));
         return String.join(" | ", items);
     }
 
     private String safeText(JsonNode node, String fieldName) {
         JsonNode field = node.path(fieldName);
-        return field.isMissingNode() || field.isNull() ? "N/A" : field.asText();
+        return field.isMissingNode() || field.isNull() ? "N/A" : field.asString();
     }
 }
-

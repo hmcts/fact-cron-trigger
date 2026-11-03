@@ -1,6 +1,6 @@
 package uk.gov.hmcts.reform.fact.services;
 
-import com.fasterxml.jackson.databind.JsonNode;
+import tools.jackson.databind.JsonNode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -21,4 +21,3 @@ public class CsvGenerationService {
         azureService.createCsvFileAndUpload("csv", "courts-and-tribunals-data.csv", courtData);
     }
 }
-

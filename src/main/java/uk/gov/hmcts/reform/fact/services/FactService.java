@@ -1,8 +1,8 @@
 package uk.gov.hmcts.reform.fact.services;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import tools.jackson.core.JacksonException;
+import tools.jackson.databind.JsonNode;
+import tools.jackson.databind.json.JsonMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.reform.fact.exceptions.JsonConvertException;
@@ -26,8 +26,8 @@ public class FactService {
         try {
             // Explicit mapping to a model to make the CSV creation easier
             // Also increases performance by giving explicit indication of how the mapper will structure the JsonNode
-            return new ObjectMapper().readTree(factClient.getAllCourtData());
-        } catch (JsonProcessingException ex) {
+            return JsonMapper.builder().build().readTree(factClient.getAllCourtData());
+        } catch (JacksonException ex) {
             throw new JsonConvertException(String.format("Error converting JSON to court model: %s", ex.getMessage()));
         }
     }

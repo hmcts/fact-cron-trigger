@@ -140,11 +140,15 @@ We use a few automated tools to ensure quality and security within the service. 
 
 ## Test Suite
 
-This application is comprehensively tested using a suite of unit tests.
+This application is tested using unit and integration test suites.
 
 ### Unit tests
 
 Unit tests can be run on demand using `./gradlew test`.
+
+Integration tests can be run using `./gradlew integration`. They may require the local Azure
+Storage emulator and configured API endpoints. The `check` and `build` tasks also run the
+integration tests.
 
 ## Contributing
 We are happy to accept third-party contributions. See [.github/CONTRIBUTING.md](./.github/CONTRIBUTING.md) for more details.

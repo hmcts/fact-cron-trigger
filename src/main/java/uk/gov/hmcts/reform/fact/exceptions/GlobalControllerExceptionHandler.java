@@ -1,7 +1,6 @@
 package uk.gov.hmcts.reform.fact.exceptions;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import tools.jackson.databind.json.JsonMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -20,19 +19,18 @@ public class GlobalControllerExceptionHandler {
     private static final String APPLICATION_JSON = "application/json";
 
     /**
-     * Handles JsonProcessingException.
+     * Handles JSON conversion failures.
      *
      * @param ex the exception
      * @return the response entity
-     * @throws JsonConvertException if the response entity cannot be converted to a string
      */
     @ExceptionHandler(JsonConvertException.class)
-    ResponseEntity<String> handleJsonConvertException(final JsonConvertException ex) throws JsonProcessingException {
+    ResponseEntity<String> handleJsonConvertException(final JsonConvertException ex) {
         HashMap<String, String> error = new HashMap<>();
         HttpHeaders responseHeaders = new HttpHeaders();
         responseHeaders.set(CONTENT_TYPE, APPLICATION_JSON);
         error.put(MESSAGE, ex.getMessage());
-        return new ResponseEntity<>(new ObjectMapper().writeValueAsString(error),
+        return new ResponseEntity<>(JsonMapper.builder().build().writeValueAsString(error),
                                     responseHeaders, HttpStatus.INTERNAL_SERVER_ERROR
         );
     }
