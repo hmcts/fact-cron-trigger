@@ -10,7 +10,7 @@ plugins {
     See https://github.com/hmcts/gradle-java-plugin
  */
   id 'uk.gov.hmcts.java' version '0.12.68'
-  id 'io.freefair.lombok' version '8.14.3'
+  id 'io.freefair.lombok' version '8.14.4'
 }
 
 group = 'uk.gov.hmcts.reform'
