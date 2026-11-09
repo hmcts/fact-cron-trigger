@@ -154,7 +154,7 @@ ext['springCloudVersion'] = '2025.1.4'
 dependencies {
   implementation platform("org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}")
   implementation group: 'com.azure.spring', name: 'spring-cloud-azure-starter-storage-blob', version: '7.4.0'
-  implementation group: 'tools.jackson.dataformat', name: 'jackson-dataformat-csv', version: '3.1.7'
+  implementation group: 'tools.jackson.dataformat', name: 'jackson-dataformat-csv', version: '3.3.0'
   implementation group: 'org.springframework.boot', name: 'spring-boot-starter-webmvc'
   implementation group: 'org.springframework.boot', name: 'spring-boot-starter-actuator'
   implementation group: 'org.springframework.boot', name: 'spring-boot-starter-aspectj'
